@@ -194,65 +194,293 @@ const mutation = new GraphQLObjectType({
         );
       },
     },
+    // Update Profile
+    updateProfile: {
+      type: ProfileType,
+      args: {
+        name: { type: GraphQLString },
+      },
+      async resolve(parent: any, args: any) {
+        try {
+          const profile = await Profile.findOne({ user: args.user });
+          if (!profile)
+            return {
+              success: false,
+              error: "Could not update profile. Profile not found.",
+            };
+
+          profile.name = args.name;
+
+          return profile.save();
+        } catch (error) {
+          return { success: false, error: "Could not update profile" };
+        }
+      },
+    },
+    // Add Project
+    addProject: {
+      type: ProjectType,
+      args: {
+        title: { type: GraphQLNonNull(GraphQLString) },
+        description: { type: GraphQLString },
+      },
+      async resolve(parent: any, args: any) {
+        try {
+          const profile = await Profile.findOne({ user: args.user });
+          if (!profile)
+            return {
+              success: false,
+              error: "Could not add project. Profile not found.",
+            };
+
+          const project = new Project({
+            title: args.title,
+            description: args.description,
+            profile: profile._id,
+          });
+
+          return project.save();
+        } catch (error) {
+          return { success: false, error: "Could not add project" };
+        }
+      },
+    },
+    // Update Project
+    updateProject: {
+      type: ProjectType,
+      args: {
+        title: { type: GraphQLNonNull(GraphQLString) },
+        description: { type: GraphQLString },
+        projectId: { type: GraphQLID },
+      },
+      async resolve(parent: any, args: any) {
+        try {
+          const profile = await Profile.findOne({ user: args.user });
+          if (!profile)
+            return {
+              success: false,
+              error: "Could not update project. Profile not found.",
+            };
+          const project = await Project.findById(args.projectId);
+          if (!project)
+            return {
+              success: false,
+              error: "Could not update project. Project not found.",
+            };
+
+          if (project.profile !== profile._id) {
+            return {
+              success: false,
+              error: "Could not update project. Unauthorized.",
+            };
+          }
+
+          project.title = args.title;
+          project.description = args.description;
+
+          return project.save();
+        } catch (error) {
+          return { success: false, error: "Could not update project" };
+        }
+      },
+    },
+    // Delete Project
+    deleteProject: {
+      type: ProjectType,
+      args: {
+        projectId: { type: GraphQLID },
+      },
+      async resolve(parent: any, args: any) {
+        try {
+          const profile = await Profile.findOne({ user: args.user });
+          if (!profile)
+            return {
+              success: false,
+              error: "Could not delete project. Profile not found.",
+            };
+          const project = await Project.findById(args.projectId);
+          if (!project)
+            return {
+              success: false,
+              error: "Could not delete project. Project not found.",
+            };
+          if (project.profile !== profile._id) {
+            return {
+              success: false,
+              error: "Could not delete project. Unauthorized.",
+            };
+          }
+
+          project.deleted = true;
+
+          return project.save();
+        } catch (error) {
+          return { success: false, error: "Could not delete project" };
+        }
+      },
+    },
     // Add Card
     addCard: {
       type: CardType,
       args: {
-        word: { type: GraphQLNonNull(GraphQLString) },
-        sentence: { type: GraphQLNonNull(GraphQLString) },
-        translation: { type: GraphQLNonNull(GraphQLString) },
+        title: { type: GraphQLNonNull(GraphQLString) },
+        description: { type: GraphQLString },
+        hint: { type: GraphQLString },
+        answer: { type: GraphQLString },
         stage: { type: GraphQLNonNull(GraphQLString) },
-        profile: { type: GraphQLNonNull(GraphQLID) },
+        projectId: { type: GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent: any, args: any) {
-        const card = new Card({
-          word: args.word,
-          sentence: args.sentence,
-          translation: args.translation,
-          stage: args.stage,
-          profile: args.profile,
-        });
+      async resolve(parent: any, args: any) {
+        try {
+          const profile = await Profile.findOne({ user: args.user });
+          if (!profile)
+            return {
+              success: false,
+              error: "Could not add card. Profile not found.",
+            };
+          const project = await Project.findById(args.projectId);
+          if (!project)
+            return {
+              success: false,
+              error: "Could not add card. Project not found.",
+            };
+          if (project.profile !== profile._id) {
+            return {
+              success: false,
+              error: "Could not add card. Unauthorized.",
+            };
+          }
+          if (project.deleted) {
+            return {
+              success: false,
+              error: "Could not add card. Project is deleted.",
+            };
+          }
 
-        return card.save();
+          const card = new Card({
+            title: args.title,
+            description: args.description,
+            hint: args.hint,
+            answer: args.answer,
+            stage: args.stage,
+            profile: profile._id,
+            project: project._id,
+          });
+
+          return card.save();
+        } catch (error) {
+          return { success: false, error: "Could not add card" };
+        }
       },
     },
     // Update Card
     updateCard: {
       type: CardType,
       args: {
-        id: { type: GraphQLNonNull(GraphQLID) },
-        word: { type: GraphQLNonNull(GraphQLString) },
-        sentence: { type: GraphQLNonNull(GraphQLString) },
-        translation: { type: GraphQLNonNull(GraphQLString) },
+        title: { type: GraphQLNonNull(GraphQLString) },
+        description: { type: GraphQLString },
+        hint: { type: GraphQLString },
+        answer: { type: GraphQLString },
         stage: { type: GraphQLNonNull(GraphQLString) },
+        cardId: { type: GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent: any, args: any) {
-        return Card.findByIdAndUpdate(
-          args.id,
-          {
-            $set: {
-              word: args.word,
-              sentence: args.sentence,
-              translation: args.translation,
-              stage: args.stage,
-            },
-          },
-          { new: true }
-        );
+      async resolve(parent: any, args: any) {
+        try {
+          const profile = await Profile.findOne({ user: args.user });
+          if (!profile)
+            return {
+              success: false,
+              error: "Could not update card. Profile not found.",
+            };
+          const card = await Card.findById(args.cardId);
+          if (!card)
+            return {
+              success: false,
+              error: "Could not update card. Card not found.",
+            };
+          if (card.deleted)
+            return {
+              success: false,
+              error: "Could not update card. Card is deleted.",
+            };
+          if (card.profile !== profile._id)
+            return {
+              success: false,
+              error: "Could not update card. Unauthorized.",
+            };
+          const project = await Project.findById(card.project);
+          if (!project)
+            return {
+              success: false,
+              error: "Could not update card. Project not found.",
+            };
+          if (project.deleted) {
+            return {
+              success: false,
+              error: "Could not update card. Project is deleted.",
+            };
+          }
+
+          card.title = args.title;
+          card.description = args.description;
+          card.hint = args.hint;
+          card.answer = args.answer;
+          card.stage = args.stage;
+
+          return card.save();
+        } catch (error) {
+          return { success: false, error: "Could not update card" };
+        }
       },
     },
     // Delete Card
     deleteCard: {
       type: CardType,
       args: {
-        id: { type: GraphQLNonNull(GraphQLID) },
-        word: { type: GraphQLNonNull(GraphQLString) },
-        sentence: { type: GraphQLNonNull(GraphQLString) },
-        translation: { type: GraphQLNonNull(GraphQLString) },
-        stage: { type: GraphQLNonNull(GraphQLString) },
+        cardId: { type: GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent: any, args: any) {
-        return Card.findByIdAndRemove(args.id);
+      async resolve(parent: any, args: any) {
+        try {
+          const profile = await Profile.findOne({ user: args.user });
+          if (!profile)
+            return {
+              success: false,
+              error: "Could not delete card. Profile not found.",
+            };
+          const card = await Card.findById(args.cardId);
+          if (!card)
+            return {
+              success: false,
+              error: "Could not delete card. Card not found.",
+            };
+          if (card.deleted)
+            return {
+              success: false,
+              error: "Could not delete card. Card is deleted.",
+            };
+          if (card.profile !== profile._id)
+            return {
+              success: false,
+              error: "Could not delete card. Unauthorized.",
+            };
+          const project = await Project.findById(card.project);
+          if (!project)
+            return {
+              success: false,
+              error: "Could not delete card. Project not found.",
+            };
+          if (project.deleted) {
+            return {
+              success: false,
+              error: "Could not delete card. Project is deleted.",
+            };
+          }
+          card.deleted = true;
+
+          return card.save();
+        } catch (error) {
+          return { success: false, error: "Could not deleted card" };
+        }
       },
     },
   },

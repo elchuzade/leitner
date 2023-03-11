@@ -17,6 +17,10 @@ const CardSchema = new Schema(
     stage: {
       type: Number,
     },
+    profile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
