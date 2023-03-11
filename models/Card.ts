@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from "mongoose";
 
 const CardSchema = new Schema(
   {
@@ -19,14 +19,15 @@ const CardSchema = new Schema(
     },
     project: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Project'
+      ref: "Project",
     },
     deleted: {
       type: Boolean,
       required: true,
-      default: false
-    }
-  }, { timestamps: true }
-)
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
-module.exports = model('Card', CardSchema)
+module.exports = model("Card", CardSchema);
