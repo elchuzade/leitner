@@ -2,21 +2,29 @@ import { Schema, model } from 'mongoose'
 
 const CardSchema = new Schema(
   {
-    profile: {
-      type: Schema.Types.ObjectId,
-      ref: 'Profile'
+    title: {
+      type: String,
     },
-    word: {
-      type: String
+    description: {
+      type: String,
     },
-    sentence: {
-      type: String
+    hint: {
+      type: String,
     },
-    translation: {
-      type: String
+    answer: {
+      type: String,
     },
     stage: {
-      type: Number
+      type: Number,
+    },
+    project: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project'
+    },
+    deleted: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   }, { timestamps: true }
 )

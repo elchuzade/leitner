@@ -7,13 +7,14 @@ const ProfileSchema = new Schema(
       ref: 'User',
       required: true
     },
-    cards: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Card',
-        required: true
-      }
-    ]
+    name: {
+      type: String
+    },
+    deleted: {
+      type: Boolean,
+      required: true,
+      default: false
+    }
   }, { timestamps: true }
 )
 

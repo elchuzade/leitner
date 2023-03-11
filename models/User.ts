@@ -2,10 +2,6 @@ import { Schema, model } from 'mongoose'
 
 const UserSchema = new Schema(
   {
-    profile: {
-      type: Schema.Types.ObjectId,
-      ref: 'Profile'
-    },
     email: {
       type: String,
       required: true
@@ -13,6 +9,15 @@ const UserSchema = new Schema(
     password: {
       type: String,
       required: true
+    },
+    permission: {
+      type: Number,
+      required: true
+    },
+    deleted: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   }, { timestamps: true }
 )
