@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield mongoose.connect(process.env.MONGO_URI);
     console.log(`MongoDB connected: ${conn.connection.host}`);

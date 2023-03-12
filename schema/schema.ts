@@ -17,6 +17,7 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLEnumType,
+  GraphQLError,
 } = require("graphql");
 
 // User Type
@@ -26,8 +27,15 @@ const UserType = new GraphQLObjectType({
     id: { type: GraphQLID },
     password: { type: GraphQLNonNull(GraphQLString) },
     email: { type: GraphQLNonNull(GraphQLString) },
-    permission: { type: GraphQLNumber },
-    deleted: { type: GraphQLBoolean },
+    name: { type: GraphQLString },
+  }),
+});
+
+// Auth Type
+const AuthType = new GraphQLObjectType({
+  name: "Auth",
+  fields: () => ({
+    token: { type: GraphQLString },
   }),
 });
 
@@ -87,7 +95,8 @@ const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
     user: {
-      type: new GraphQLList(UserType),
+      type: UserType,
+      args: { id: { type: GraphQLID } },
       resolve(parent: any, args: any) {
         return User.findById(args.id);
       },
@@ -101,24 +110,28 @@ const RootQuery = new GraphQLObjectType({
     },
     projects: {
       type: new GraphQLList(ProjectType),
+      args: { profile: { type: GraphQLID } },
       resolve(parent: any, args: any) {
         return Project.find({ profile: args.profile });
       },
     },
     project: {
-      type: new GraphQLList(ProjectType),
+      type: ProjectType,
+      args: { id: { type: GraphQLID } },
       resolve(parent: any, args: any) {
         return Project.findById(args.id);
       },
     },
     cards: {
       type: new GraphQLList(CardType),
+      args: { profile: { type: GraphQLID } },
       resolve(parent: any, args: any) {
         return Card.find({ project: args.profile });
       },
     },
     card: {
-      type: new GraphQLList(CardType),
+      type: CardType,
+      args: { id: { type: GraphQLID } },
       resolve(parent: any, args: any) {
         return Card.findById(args.id);
       },
@@ -132,13 +145,19 @@ const mutation = new GraphQLObjectType({
   fields: {
     // Sign Up
     signup: {
-      type: UserType,
+      type: AuthType,
       args: {
         email: { type: GraphQLNonNull(GraphQLString) },
         password: { type: GraphQLNonNull(GraphQLString) },
         name: { type: GraphQLString },
       },
       async resolve(parent: any, args: any) {
+        const foundUser = await User.findOne({ email: args.email });
+        if (foundUser != null)
+          throw new GraphQLError("User with this email already exists.", {
+            extensions: { code: "" },
+          });
+
         const user = new User({
           email: args.email,
           password: args.password,
@@ -146,52 +165,62 @@ const mutation = new GraphQLObjectType({
           deleted: false,
         });
 
-        bcrypt.genSalt(10, (err: any, salt: any) => {
-          bcrypt.hash(user.password, salt, async (err: any, hash: any) => {
-            if (err) throw err;
+        const salt = await bcrypt.genSalt(10);
+        console.log(salt);
+        const hash = await bcrypt.hash(user.password, salt);
+        console.log(hash);
+        user.password = hash;
 
-            user.password = hash;
+        const profile = new Profile({ user: user._id, name: args.name });
+        await profile.save();
+        await user.save();
 
-            const profile = new Profile({ user: user._id, name: args.name });
-            await profile.save();
+        const payload = {
+          id: user.id,
+          permission: user.permission,
+        }; // jwt payload
+        // Sign Token
+        const token = await jwt.sign(
+          payload,
+          process.env.SECRET_OR_KEY,
+          { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
+        );
 
-            return user.save();
-          });
-        });
+        return { token: "Bearer " + token };
       },
     },
     // Sign In
     signin: {
-      type: UserType,
+      type: AuthType,
       args: {
         email: { type: GraphQLNonNull(GraphQLString) },
         password: { type: GraphQLNonNull(GraphQLString) },
       },
       async resolve(parent: any, args: any) {
         const user = await User.findOne({ email: args.email });
-        if (!user) return { success: false, error: "User not found" };
+        if (!user)
+          throw new GraphQLError("User not found.", {
+            extensions: { code: "" },
+          });
 
         const isMatch = await bcrypt.compare(args.password, user.password);
-        if (!isMatch) return { success: false, error: "Password is incorrect" };
+        if (!isMatch)
+          throw new GraphQLError("Password is incorrect.", {
+            extensions: { code: "" },
+          });
 
         const payload = {
           id: user.id,
           permission: user.permission,
-          profile: user.profile,
         }; // jwt payload
         // Sign Token
-        jwt.sign(
+        const token = await jwt.sign(
           payload,
           process.env.SECRET_OR_KEY,
-          { expiresIn: 3600 * 24 * 365 }, // token expires in 1 year
-          (err: any, token: string) => {
-            if (err) {
-              console.log(err);
-            } else {
-              return { success: true, token: "Bearer " + token };
-            }
-          }
+          { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
         );
+
+        return { token: "Bearer " + token };
       },
     },
     // Update Profile

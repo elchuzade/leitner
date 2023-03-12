@@ -2,17 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const UserSchema = new mongoose_1.Schema({
-    profile: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Profile'
-    },
     email: {
         type: String,
-        required: true
+        required: true,
     },
     password: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
+    permission: {
+        type: Number,
+        required: true,
+    },
+    deleted: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 }, { timestamps: true });
-module.exports = (0, mongoose_1.model)('User', UserSchema);
+module.exports = (0, mongoose_1.model)("User", UserSchema);

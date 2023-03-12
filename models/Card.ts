@@ -18,11 +18,11 @@ const CardSchema = new Schema(
       type: Number,
     },
     profile: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Profile",
     },
     project: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Project",
     },
     deleted: {
