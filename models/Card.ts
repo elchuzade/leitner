@@ -17,13 +17,15 @@ const CardSchema = new Schema(
     stage: {
       type: Number,
     },
-    profile: {
+    user: {
       type: Schema.Types.ObjectId,
-      ref: "Profile",
+      ref: "User",
+      required: true,
     },
     project: {
       type: Schema.Types.ObjectId,
       ref: "Project",
+      required: true,
     },
     deleted: {
       type: Boolean,

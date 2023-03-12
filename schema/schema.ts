@@ -1,11 +1,10 @@
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
 const Project = require("../models/Project");
 const Card = require("../models/Card");
-
-require("dotenv").config();
 
 const {
   GraphQLObjectType,
@@ -94,21 +93,25 @@ const CardType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
+    // Get my profile
     profile: {
       type: ProfileType,
-      args: { id: { type: GraphQLID } },
       resolve(parent: any, args: any, context: any) {
-        console.log(context?.headers?.authorization);
-        return Profile.findById(args.id);
+        const token = context?.headers?.authorization;
+        const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        return Profile.findOne({ user: payload.id });
       },
     },
+    // Get all projects that belong to me
     projects: {
       type: new GraphQLList(ProjectType),
-      args: { profile: { type: GraphQLID } },
-      resolve(parent: any, args: any) {
-        return Project.find({ profile: args.profile });
+      resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        return Project.find({ user: payload.id });
       },
     },
+    // Get project based on id
     project: {
       type: ProjectType,
       args: { id: { type: GraphQLID } },
@@ -116,17 +119,23 @@ const RootQuery = new GraphQLObjectType({
         return Project.findById(args.id);
       },
     },
+    // Get all cards that belong to a specific project
     cards: {
       type: new GraphQLList(CardType),
-      args: { profile: { type: GraphQLID } },
-      resolve(parent: any, args: any) {
-        return Card.find({ project: args.profile });
+      args: { project: { type: GraphQLID } },
+      resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        return Card.find({ project: args.project });
       },
     },
+    // Get a card based on id
     card: {
       type: CardType,
       args: { id: { type: GraphQLID } },
-      resolve(parent: any, args: any) {
+      resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
         return Card.findById(args.id);
       },
     },
@@ -160,9 +169,7 @@ const mutation = new GraphQLObjectType({
         });
 
         const salt = await bcrypt.genSalt(10);
-        console.log(salt);
         const hash = await bcrypt.hash(user.password, salt);
-        console.log(hash);
         user.password = hash;
 
         const profile = new Profile({ user: user._id, name: args.name });
@@ -180,7 +187,7 @@ const mutation = new GraphQLObjectType({
           { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
         );
 
-        return { token: "Bearer " + token };
+        return { token };
       },
     },
     // Sign In
@@ -214,7 +221,7 @@ const mutation = new GraphQLObjectType({
           { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
         );
 
-        return { token: "Bearer " + token };
+        return { token };
       },
     },
     // Update Profile

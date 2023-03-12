@@ -8,9 +8,9 @@ const ProjectSchema = new mongoose_1.Schema({
     description: {
         type: String,
     },
-    profile: {
+    user: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: "Profile",
+        ref: "User",
         required: true,
     },
     deleted: {

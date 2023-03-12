@@ -7,9 +7,9 @@ const ProjectSchema = new Schema({
   description: {
     type: String,
   },
-  profile: {
+  user: {
     type: Schema.Types.ObjectId,
-    ref: "Profile",
+    ref: "User",
     required: true,
   },
   deleted: {
