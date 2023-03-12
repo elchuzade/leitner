@@ -85,17 +85,12 @@ const CardType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
-        user: {
-            type: UserType,
-            args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-                return User.findById(args.id);
-            },
-        },
         profile: {
             type: ProfileType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
+            resolve(parent, args, context) {
+                var _a;
+                console.log((_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization);
                 return Profile.findById(args.id);
             },
         },
