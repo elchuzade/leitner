@@ -122,7 +122,7 @@ const RootQuery = new GraphQLObjectType({
 
         const project = await Project.findById(args.id);
         if (project.user !== userPayload.id) {
-          throw new GraphQLError("Unathorized.", {
+          throw new GraphQLError("Could not get project. Unathorized.", {
             extensions: { code: "" },
           });
         }
@@ -150,7 +150,7 @@ const RootQuery = new GraphQLObjectType({
 
         const card = await Card.findById(args.id);
         if (card.user !== userPayload.id) {
-          throw new GraphQLError("Unathorized.", {
+          throw new GraphQLError("Could not get card. Unathorized.", {
             extensions: { code: "" },
           });
         }
@@ -312,34 +312,41 @@ const mutation = new GraphQLObjectType({
         description: { type: GraphQLString },
         projectId: { type: GraphQLID },
       },
-      async resolve(parent: any, args: any) {
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
         try {
-          const profile = await Profile.findOne({ user: args.user });
-          if (!profile)
-            return {
-              success: false,
-              error: "Could not update project. Profile not found.",
-            };
+          const user = await User.findById(userPayload.id);
+          if (!user)
+            throw new GraphQLError(
+              "Could not update project. User not found.",
+              {
+                extensions: { code: "" },
+              }
+            );
           const project = await Project.findById(args.projectId);
           if (!project)
-            return {
-              success: false,
-              error: "Could not update project. Project not found.",
-            };
+            throw new GraphQLError(
+              "Could not update project. Project not found.",
+              {
+                extensions: { code: "" },
+              }
+            );
 
-          if (project.profile !== profile._id) {
-            return {
-              success: false,
-              error: "Could not update project. Unauthorized.",
-            };
+          if (JSON.stringify(project.user) !== JSON.stringify(user._id)) {
+            throw new GraphQLError("Could not update project. Unathorized.", {
+              extensions: { code: "" },
+            });
           }
-
           project.title = args.title;
           project.description = args.description;
 
           return project.save();
         } catch (error) {
-          return { success: false, error: "Could not update project" };
+          throw new GraphQLError("Could not update project.", {
+            extensions: { code: "" },
+          });
         }
       },
     },
@@ -349,7 +356,10 @@ const mutation = new GraphQLObjectType({
       args: {
         projectId: { type: GraphQLID },
       },
-      async resolve(parent: any, args: any) {
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
         try {
           const profile = await Profile.findOne({ user: args.user });
           if (!profile)
@@ -389,7 +399,10 @@ const mutation = new GraphQLObjectType({
         stage: { type: GraphQLNonNull(GraphQLString) },
         projectId: { type: GraphQLNonNull(GraphQLID) },
       },
-      async resolve(parent: any, args: any) {
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
         try {
           const profile = await Profile.findOne({ user: args.user });
           if (!profile)
@@ -443,7 +456,10 @@ const mutation = new GraphQLObjectType({
         stage: { type: GraphQLNonNull(GraphQLString) },
         cardId: { type: GraphQLNonNull(GraphQLID) },
       },
-      async resolve(parent: any, args: any) {
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
         try {
           const profile = await Profile.findOne({ user: args.user });
           if (!profile)
@@ -498,7 +514,10 @@ const mutation = new GraphQLObjectType({
       args: {
         cardId: { type: GraphQLNonNull(GraphQLID) },
       },
-      async resolve(parent: any, args: any) {
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
         try {
           const profile = await Profile.findOne({ user: args.user });
           if (!profile)
