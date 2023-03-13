@@ -61,10 +61,10 @@ const ProjectType = new GraphQLObjectType({
     id: { type: GraphQLID },
     title: { type: GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },
-    profile: {
-      type: ProfileType,
+    user: {
+      type: UserType,
       resolve(parent: any, args: any) {
-        return Profile.findById(parent.profile);
+        return User.findById(parent.user);
       },
     },
   }),
@@ -80,10 +80,10 @@ const CardType = new GraphQLObjectType({
     description: { type: GraphQLString },
     hint: { type: GraphQLString },
     answer: { type: GraphQLString },
-    profile: {
-      type: ProfileType,
+    user: {
+      type: UserType,
       resolve(parent: any, args: any) {
-        return Profile.findById(parent.profile);
+        return User.findById(parent.user);
       },
     },
   }),
@@ -98,8 +98,9 @@ const RootQuery = new GraphQLObjectType({
       type: ProfileType,
       resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
-        const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
-        return Profile.findOne({ user: payload.id });
+        console.log(token);
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        return Profile.findOne({ user: userPayload.id });
       },
     },
     // Get all projects that belong to me
@@ -107,16 +108,26 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(ProjectType),
       resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
-        const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
-        return Project.find({ user: payload.id });
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        return Project.find({ user: userPayload.id });
       },
     },
     // Get project based on id
     project: {
       type: ProjectType,
       args: { id: { type: GraphQLID } },
-      resolve(parent: any, args: any) {
-        return Project.findById(args.id);
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
+        const project = await Project.findById(args.id);
+        if (project.user !== userPayload.id) {
+          throw new GraphQLError("Unathorized.", {
+            extensions: { code: "" },
+          });
+        }
+
+        return project;
       },
     },
     // Get all cards that belong to a specific project
@@ -125,18 +136,25 @@ const RootQuery = new GraphQLObjectType({
       args: { project: { type: GraphQLID } },
       resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
-        const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
-        return Card.find({ project: args.project });
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        return Card.find({ project: args.project, user: userPayload.id });
       },
     },
     // Get a card based on id
     card: {
       type: CardType,
       args: { id: { type: GraphQLID } },
-      resolve(parent: any, args: any, context: any) {
+      async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
-        const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
-        return Card.findById(args.id);
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
+        const card = await Card.findById(args.id);
+        if (card.user !== userPayload.id) {
+          throw new GraphQLError("Unathorized.", {
+            extensions: { code: "" },
+          });
+        }
+        return card;
       },
     },
   },
@@ -176,13 +194,13 @@ const mutation = new GraphQLObjectType({
         await profile.save();
         await user.save();
 
-        const payload = {
+        const userPayload = {
           id: user.id,
           permission: user.permission,
-        }; // jwt payload
+        }; // jwt userPayload
         // Sign Token
         const token = await jwt.sign(
-          payload,
+          userPayload,
           process.env.SECRET_OR_KEY,
           { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
         );
@@ -210,13 +228,13 @@ const mutation = new GraphQLObjectType({
             extensions: { code: "" },
           });
 
-        const payload = {
+        const userPayload = {
           id: user.id,
           permission: user.permission,
-        }; // jwt payload
+        }; // jwt userPayload
         // Sign Token
         const token = await jwt.sign(
-          payload,
+          userPayload,
           process.env.SECRET_OR_KEY,
           { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
         );
@@ -230,20 +248,27 @@ const mutation = new GraphQLObjectType({
       args: {
         name: { type: GraphQLString },
       },
-      async resolve(parent: any, args: any) {
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
         try {
-          const profile = await Profile.findOne({ user: args.user });
+          const profile = await Profile.findOne({ user: userPayload.id });
           if (!profile)
-            return {
-              success: false,
-              error: "Could not update profile. Profile not found.",
-            };
+            throw new GraphQLError(
+              "Could not update profile. Profile not found.",
+              {
+                extensions: { code: "" },
+              }
+            );
 
           profile.name = args.name;
 
           return profile.save();
         } catch (error) {
-          return { success: false, error: "Could not update profile" };
+          throw new GraphQLError("Could not update profile.", {
+            extensions: { code: "" },
+          });
         }
       },
     },
@@ -254,24 +279,28 @@ const mutation = new GraphQLObjectType({
         title: { type: GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLString },
       },
-      async resolve(parent: any, args: any) {
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+
         try {
-          const profile = await Profile.findOne({ user: args.user });
-          if (!profile)
-            return {
-              success: false,
-              error: "Could not add project. Profile not found.",
-            };
+          const user = await User.findById(userPayload.id);
+          if (!user)
+            throw new GraphQLError("Could not add project. User not found.", {
+              extensions: { code: "" },
+            });
 
           const project = new Project({
             title: args.title,
             description: args.description,
-            profile: profile._id,
+            user: user._id,
           });
 
           return project.save();
         } catch (error) {
-          return { success: false, error: "Could not add project" };
+          throw new GraphQLError("Could not add project.", {
+            extensions: { code: "" },
+          });
         }
       },
     },

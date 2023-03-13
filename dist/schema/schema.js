@@ -55,10 +55,10 @@ const ProjectType = new GraphQLObjectType({
         id: { type: GraphQLID },
         title: { type: GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLString },
-        profile: {
-            type: ProfileType,
+        user: {
+            type: UserType,
             resolve(parent, args) {
-                return Profile.findById(parent.profile);
+                return User.findById(parent.user);
             },
         },
     }),
@@ -73,10 +73,10 @@ const CardType = new GraphQLObjectType({
         description: { type: GraphQLString },
         hint: { type: GraphQLString },
         answer: { type: GraphQLString },
-        profile: {
-            type: ProfileType,
+        user: {
+            type: UserType,
             resolve(parent, args) {
-                return Profile.findById(parent.profile);
+                return User.findById(parent.user);
             },
         },
     }),
@@ -91,8 +91,9 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args, context) {
                 var _a;
                 const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
-                const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
-                return Profile.findOne({ user: payload.id });
+                console.log(token);
+                const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+                return Profile.findOne({ user: userPayload.id });
             },
         },
         // Get all projects that belong to me
@@ -101,16 +102,27 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args, context) {
                 var _a;
                 const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
-                const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
-                return Project.find({ user: payload.id });
+                const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+                return Project.find({ user: userPayload.id });
             },
         },
         // Get project based on id
         project: {
             type: ProjectType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-                return Project.findById(args.id);
+            resolve(parent, args, context) {
+                var _a;
+                return __awaiter(this, void 0, void 0, function* () {
+                    const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
+                    const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+                    const project = yield Project.findById(args.id);
+                    if (project.user !== userPayload.id) {
+                        throw new GraphQLError("Unathorized.", {
+                            extensions: { code: "" },
+                        });
+                    }
+                    return project;
+                });
             },
         },
         // Get all cards that belong to a specific project
@@ -120,8 +132,8 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args, context) {
                 var _a;
                 const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
-                const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
-                return Card.find({ project: args.project });
+                const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+                return Card.find({ project: args.project, user: userPayload.id });
             },
         },
         // Get a card based on id
@@ -130,9 +142,17 @@ const RootQuery = new GraphQLObjectType({
             args: { id: { type: GraphQLID } },
             resolve(parent, args, context) {
                 var _a;
-                const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
-                const payload = jwt.verify(token, process.env.SECRET_OR_KEY);
-                return Card.findById(args.id);
+                return __awaiter(this, void 0, void 0, function* () {
+                    const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
+                    const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+                    const card = yield Card.findById(args.id);
+                    if (card.user !== userPayload.id) {
+                        throw new GraphQLError("Unathorized.", {
+                            extensions: { code: "" },
+                        });
+                    }
+                    return card;
+                });
             },
         },
     },
@@ -168,12 +188,12 @@ const mutation = new GraphQLObjectType({
                     const profile = new Profile({ user: user._id, name: args.name });
                     yield profile.save();
                     yield user.save();
-                    const payload = {
+                    const userPayload = {
                         id: user.id,
                         permission: user.permission,
-                    }; // jwt payload
+                    }; // jwt userPayload
                     // Sign Token
-                    const token = yield jwt.sign(payload, process.env.SECRET_OR_KEY, { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
+                    const token = yield jwt.sign(userPayload, process.env.SECRET_OR_KEY, { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
                     );
                     return { token };
                 });
@@ -198,12 +218,12 @@ const mutation = new GraphQLObjectType({
                         throw new GraphQLError("Password is incorrect.", {
                             extensions: { code: "" },
                         });
-                    const payload = {
+                    const userPayload = {
                         id: user.id,
                         permission: user.permission,
-                    }; // jwt payload
+                    }; // jwt userPayload
                     // Sign Token
-                    const token = yield jwt.sign(payload, process.env.SECRET_OR_KEY, { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
+                    const token = yield jwt.sign(userPayload, process.env.SECRET_OR_KEY, { expiresIn: 3600 * 24 * 365 } // token expires in 1 year
                     );
                     return { token };
                 });
@@ -215,20 +235,24 @@ const mutation = new GraphQLObjectType({
             args: {
                 name: { type: GraphQLString },
             },
-            resolve(parent, args) {
+            resolve(parent, args, context) {
+                var _a;
                 return __awaiter(this, void 0, void 0, function* () {
+                    const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
+                    const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
                     try {
-                        const profile = yield Profile.findOne({ user: args.user });
+                        const profile = yield Profile.findOne({ user: userPayload.id });
                         if (!profile)
-                            return {
-                                success: false,
-                                error: "Could not update profile. Profile not found.",
-                            };
+                            throw new GraphQLError("Could not update profile. Profile not found.", {
+                                extensions: { code: "" },
+                            });
                         profile.name = args.name;
                         return profile.save();
                     }
                     catch (error) {
-                        return { success: false, error: "Could not update profile" };
+                        throw new GraphQLError("Could not update profile.", {
+                            extensions: { code: "" },
+                        });
                     }
                 });
             },
@@ -240,24 +264,28 @@ const mutation = new GraphQLObjectType({
                 title: { type: GraphQLNonNull(GraphQLString) },
                 description: { type: GraphQLString },
             },
-            resolve(parent, args) {
+            resolve(parent, args, context) {
+                var _a;
                 return __awaiter(this, void 0, void 0, function* () {
+                    const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
+                    const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
                     try {
-                        const profile = yield Profile.findOne({ user: args.user });
-                        if (!profile)
-                            return {
-                                success: false,
-                                error: "Could not add project. Profile not found.",
-                            };
+                        const user = yield User.findById(userPayload.id);
+                        if (!user)
+                            throw new GraphQLError("Could not add project. User not found.", {
+                                extensions: { code: "" },
+                            });
                         const project = new Project({
                             title: args.title,
                             description: args.description,
-                            profile: profile._id,
+                            user: user._id,
                         });
                         return project.save();
                     }
                     catch (error) {
-                        return { success: false, error: "Could not add project" };
+                        throw new GraphQLError("Could not add project.", {
+                            extensions: { code: "" },
+                        });
                     }
                 });
             },
