@@ -117,7 +117,7 @@ const RootQuery = new GraphQLObjectType({
                     const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
                     const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
                     const project = yield Project.findById(args.id);
-                    if (project.user !== userPayload.id) {
+                    if (JSON.stringify(project.user) !== JSON.stringify(userPayload.id)) {
                         throw new GraphQLError("Could not get project. Unathorized.", {
                             extensions: { code: "" },
                         });
