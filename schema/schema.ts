@@ -61,6 +61,7 @@ const ProjectType = new GraphQLObjectType({
     id: { type: GraphQLID },
     title: { type: GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },
+    deleted: { type: GraphQLBoolean },
     user: {
       type: UserType,
       resolve(parent: any, args: any) {
@@ -80,6 +81,7 @@ const CardType = new GraphQLObjectType({
     description: { type: GraphQLString },
     hint: { type: GraphQLString },
     answer: { type: GraphQLString },
+    deleted: { type: GraphQLBoolean },
     user: {
       type: UserType,
       resolve(parent: any, args: any) {
@@ -98,7 +100,6 @@ const RootQuery = new GraphQLObjectType({
       type: ProfileType,
       resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
-        console.log(token);
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
         return Profile.findOne({ user: userPayload.id });
       },
@@ -133,11 +134,11 @@ const RootQuery = new GraphQLObjectType({
     // Get all cards that belong to a specific project
     cards: {
       type: new GraphQLList(CardType),
-      args: { project: { type: GraphQLID } },
+      args: { projectId: { type: GraphQLID } },
       resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
-        return Card.find({ project: args.project, user: userPayload.id });
+        return Card.find({ project: args.projectId, user: userPayload.id });
       },
     },
     // Get a card based on id
@@ -149,7 +150,7 @@ const RootQuery = new GraphQLObjectType({
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
 
         const card = await Card.findById(args.id);
-        if (card.user !== userPayload.id) {
+        if (JSON.stringify(card.user) !== JSON.stringify(userPayload.id)) {
           throw new GraphQLError("Could not get card. Unathorized.", {
             extensions: { code: "" },
           });
@@ -251,22 +252,20 @@ const mutation = new GraphQLObjectType({
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = "Could not update profile.";
 
         try {
           const profile = await Profile.findOne({ user: userPayload.id });
-          if (!profile)
-            throw new GraphQLError(
-              "Could not update profile. Profile not found.",
-              {
-                extensions: { code: "" },
-              }
-            );
+          if (!profile) {
+            errorMessage += " Profile not found.";
+            throw errorMessage;
+          }
 
           profile.name = args.name;
 
           return profile.save();
         } catch (error) {
-          throw new GraphQLError("Could not update profile.", {
+          throw new GraphQLError(error, {
             extensions: { code: "" },
           });
         }
@@ -282,13 +281,14 @@ const mutation = new GraphQLObjectType({
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = " Could not add project.";
 
         try {
           const user = await User.findById(userPayload.id);
-          if (!user)
-            throw new GraphQLError("Could not add project. User not found.", {
-              extensions: { code: "" },
-            });
+          if (!user) {
+            errorMessage += " User not found.";
+            throw errorMessage;
+          }
 
           const project = new Project({
             title: args.title,
@@ -298,7 +298,7 @@ const mutation = new GraphQLObjectType({
 
           return project.save();
         } catch (error) {
-          throw new GraphQLError("Could not add project.", {
+          throw new GraphQLError(error, {
             extensions: { code: "" },
           });
         }
@@ -315,36 +315,31 @@ const mutation = new GraphQLObjectType({
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = "Could not update project.";
 
         try {
           const user = await User.findById(userPayload.id);
-          if (!user)
-            throw new GraphQLError(
-              "Could not update project. User not found.",
-              {
-                extensions: { code: "" },
-              }
-            );
+          if (!user) {
+            errorMessage += " User not found.";
+            throw errorMessage;
+          }
+
           const project = await Project.findById(args.projectId);
-          if (!project)
-            throw new GraphQLError(
-              "Could not update project. Project not found.",
-              {
-                extensions: { code: "" },
-              }
-            );
+          if (!project) {
+            errorMessage += " Project not found.";
+            throw errorMessage;
+          }
 
           if (JSON.stringify(project.user) !== JSON.stringify(user._id)) {
-            throw new GraphQLError("Could not update project. Unathorized.", {
-              extensions: { code: "" },
-            });
+            errorMessage += " Unathorized.";
+            throw errorMessage;
           }
           project.title = args.title;
           project.description = args.description;
 
           return project.save();
         } catch (error) {
-          throw new GraphQLError("Could not update project.", {
+          throw new GraphQLError(error, {
             extensions: { code: "" },
           });
         }
@@ -359,32 +354,33 @@ const mutation = new GraphQLObjectType({
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = "Could not delete project.";
 
         try {
-          const profile = await Profile.findOne({ user: args.user });
-          if (!profile)
-            return {
-              success: false,
-              error: "Could not delete project. Profile not found.",
-            };
+          const user = await User.findById(userPayload.id);
+          if (!user) {
+            errorMessage += " User not found.";
+            throw errorMessage;
+          }
+
           const project = await Project.findById(args.projectId);
-          if (!project)
-            return {
-              success: false,
-              error: "Could not delete project. Project not found.",
-            };
-          if (project.profile !== profile._id) {
-            return {
-              success: false,
-              error: "Could not delete project. Unauthorized.",
-            };
+          if (!project) {
+            errorMessage += " Project not found.";
+            throw errorMessage;
+          }
+
+          if (JSON.stringify(project.user) !== JSON.stringify(user._id)) {
+            errorMessage += " Unathorized";
+            throw errorMessage;
           }
 
           project.deleted = true;
 
           return project.save();
         } catch (error) {
-          return { success: false, error: "Could not delete project" };
+          throw new GraphQLError(error, {
+            extensions: { code: "" },
+          });
         }
       },
     },
@@ -402,31 +398,27 @@ const mutation = new GraphQLObjectType({
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = "Could not add card.";
 
         try {
-          const profile = await Profile.findOne({ user: args.user });
-          if (!profile)
-            return {
-              success: false,
-              error: "Could not add card. Profile not found.",
-            };
+          const user = await User.findById(userPayload.id);
+          if (!user) {
+            errorMessage += " User not found.";
+            throw errorMessage;
+          }
+
           const project = await Project.findById(args.projectId);
-          if (!project)
-            return {
-              success: false,
-              error: "Could not add card. Project not found.",
-            };
-          if (project.profile !== profile._id) {
-            return {
-              success: false,
-              error: "Could not add card. Unauthorized.",
-            };
+          if (!project) {
+            errorMessage += " Project not found.";
+            throw errorMessage;
+          }
+          if (JSON.stringify(project.user) !== JSON.stringify(user._id)) {
+            errorMessage += " Project is deleted.";
+            throw errorMessage;
           }
           if (project.deleted) {
-            return {
-              success: false,
-              error: "Could not add card. Project is deleted.",
-            };
+            errorMessage += " Project is deleted.";
+            throw errorMessage;
           }
 
           const card = new Card({
@@ -435,13 +427,15 @@ const mutation = new GraphQLObjectType({
             hint: args.hint,
             answer: args.answer,
             stage: args.stage,
-            profile: profile._id,
+            user: user._id,
             project: project._id,
           });
 
           return card.save();
         } catch (error) {
-          return { success: false, error: "Could not add card" };
+          throw new GraphQLError(error, {
+            extensions: { code: "" },
+          });
         }
       },
     },
@@ -459,41 +453,37 @@ const mutation = new GraphQLObjectType({
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = "Could not update card.";
 
         try {
-          const profile = await Profile.findOne({ user: args.user });
-          if (!profile)
-            return {
-              success: false,
-              error: "Could not update card. Profile not found.",
-            };
+          const user = await User.findById(userPayload.id);
+          if (!user) {
+            errorMessage += " User not found.";
+            throw errorMessage;
+          }
+
           const card = await Card.findById(args.cardId);
-          if (!card)
-            return {
-              success: false,
-              error: "Could not update card. Card not found.",
-            };
-          if (card.deleted)
-            return {
-              success: false,
-              error: "Could not update card. Card is deleted.",
-            };
-          if (card.profile !== profile._id)
-            return {
-              success: false,
-              error: "Could not update card. Unauthorized.",
-            };
+          if (!card) {
+            errorMessage += " Card not found.";
+            throw errorMessage;
+          }
+          if (card.deleted) {
+            errorMessage += " Card is deleted.";
+            throw errorMessage;
+          }
+          if (JSON.stringify(card.user) !== JSON.stringify(user._id)) {
+            errorMessage += " Unauthorized.";
+            throw errorMessage;
+          }
+
           const project = await Project.findById(card.project);
-          if (!project)
-            return {
-              success: false,
-              error: "Could not update card. Project not found.",
-            };
+          if (!project) {
+            errorMessage += " Project not found.";
+            throw errorMessage;
+          }
           if (project.deleted) {
-            return {
-              success: false,
-              error: "Could not update card. Project is deleted.",
-            };
+            errorMessage += " Project is deleted.";
+            throw errorMessage;
           }
 
           card.title = args.title;
@@ -504,7 +494,9 @@ const mutation = new GraphQLObjectType({
 
           return card.save();
         } catch (error) {
-          return { success: false, error: "Could not update card" };
+          throw new GraphQLError(error, {
+            extensions: { code: "" },
+          });
         }
       },
     },
@@ -517,47 +509,46 @@ const mutation = new GraphQLObjectType({
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = "Could not delete card.";
 
         try {
-          const profile = await Profile.findOne({ user: args.user });
-          if (!profile)
-            return {
-              success: false,
-              error: "Could not delete card. Profile not found.",
-            };
-          const card = await Card.findById(args.cardId);
-          if (!card)
-            return {
-              success: false,
-              error: "Could not delete card. Card not found.",
-            };
-          if (card.deleted)
-            return {
-              success: false,
-              error: "Could not delete card. Card is deleted.",
-            };
-          if (card.profile !== profile._id)
-            return {
-              success: false,
-              error: "Could not delete card. Unauthorized.",
-            };
-          const project = await Project.findById(card.project);
-          if (!project)
-            return {
-              success: false,
-              error: "Could not delete card. Project not found.",
-            };
-          if (project.deleted) {
-            return {
-              success: false,
-              error: "Could not delete card. Project is deleted.",
-            };
+          const user = await User.findById(userPayload.id);
+          if (!user) {
+            errorMessage += " User not found.";
+            throw errorMessage;
           }
+
+          const card = await Card.findById(args.cardId);
+          if (!card) {
+            errorMessage += " Card not found.";
+            throw errorMessage;
+          }
+          if (card.deleted) {
+            errorMessage += " Card is deleted.";
+            throw errorMessage;
+          }
+          if (JSON.stringify(card.user) !== JSON.stringify(user._id)) {
+            errorMessage += " Unauthorized.";
+            throw errorMessage;
+          }
+
+          const project = await Project.findById(card.project);
+          if (!project) {
+            errorMessage += " Project not found.";
+            throw errorMessage;
+          }
+          if (project.deleted) {
+            errorMessage += " Project is deleted.";
+            throw errorMessage;
+          }
+
           card.deleted = true;
 
           return card.save();
         } catch (error) {
-          return { success: false, error: "Could not deleted card" };
+          throw new GraphQLError(error, {
+            extensions: { code: "" },
+          });
         }
       },
     },
