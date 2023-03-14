@@ -9,7 +9,7 @@ const Signature = () => {
         rel="noreferrer"
         className="signature"
       >
-        Kamran Elchuzade
+        <i>by Elchuzade design</i>
       </a>
     </div>
   );
