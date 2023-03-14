@@ -1,0 +1,74 @@
+.button {
+  width: 100%;
+  margin: 0 8px;
+  text-align: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  border: 1px solid transparent;
+
+  &:hover {
+    // background: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  &-outline {
+    border: 1px solid $theme-dark;
+    background-color: transparent;
+  }
+
+  &-shadow {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  &-light {
+    background: $theme-light;
+
+    &:hover {
+      background: $theme-light-hover;
+    }
+  }
+
+  &-dark {
+    background: $theme-dark;
+    color: white;
+    &:hover {
+      background: $theme-dark-hover;
+    }
+  }
+
+  &-green {
+    background: $theme-green;
+    &:hover {
+      background: $theme-green-hover;
+    }
+  }
+
+  &-blue {
+    background: $theme-blue;
+    &:hover {
+      background: $theme-blue-hover;
+    }
+  }
+
+  &-yellow {
+    background: $theme-yellow;
+    &:hover {
+      background: $theme-yellow-hover;
+    }
+  }
+
+  &-black {
+    background: $theme-black;
+    &:hover {
+      background: $theme-black-hover;
+    }
+  }
+
+  &-white {
+    background: $theme-white;
+    &:hover {
+      background: $theme-white-hover;
+    }
+  }
+}

@@ -1,25 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import "./App.scss";
+
+import Landing from "./pages/landing/Landing";
+
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        clients: {
+          merge(existing: any, incoming: any) {
+            return incoming;
+          },
+        },
+        projects: {
+          merge(existing: any, incoming: any) {
+            return incoming;
+          },
+        },
+      },
+    },
+  },
+});
+
+const client = new ApolloClient({
+  uri: "http://localhost:5001/graphql",
+  cache,
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ApolloProvider client={client}>
+        <Router>
+          <div className="container">
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<>login</>} />
+              <Route path="/register" element={<>register</>} />
+              <Route path="/profiles/:id" element={<>my profile</>} />
+              <Route path="/project" element={<>new project</>} />
+              <Route path="/projects" element={<>my projects</>} />
+              <Route path="/projects/:id" element={<>my project</>} />
+              <Route path="/card" element={<>new card</>} />
+              <Route path="/cards" element={<>my cards</>} />
+              <Route path="/cards/:id" element={<>my card</>} />
+              <Route path="*" element={<>not found</>} />
+            </Routes>
+          </div>
+        </Router>
+      </ApolloProvider>
+    </>
   );
 }
 
