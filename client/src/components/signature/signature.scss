@@ -1,0 +1,15 @@
+.wrapper-signature {
+  position: absolute;
+  bottom: 100px;
+  font-size: 10px;
+  left: 24px;
+}
+
+.signature {
+  text-decoration: none;
+  color: $theme-dark;
+
+  :hover {
+    color: $theme-dark-hover;
+  }
+}
