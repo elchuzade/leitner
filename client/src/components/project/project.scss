@@ -1,0 +1,47 @@
+.project {
+  &-item {
+    display: flex;
+    width: auto;
+    text-align: center;
+    margin-bottom: 12px;
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    border: 1px solid transparent;
+    color: black;
+    border: 1px solid $theme-dark;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    background: $theme-light;
+    position: relative;
+
+    &:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      background: $theme-light-hover;
+      cursor: pointer;
+    }
+
+    &-progress {
+      background-color: $theme-green;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 11px;
+    }
+
+    &-title {
+      font-size: 18px;
+      color: $theme-dark;
+      z-index: 1;
+    }
+
+    &-cardscount {
+      font-size: 24px;
+      color: $theme-dark;
+      z-index: 1;
+    }
+  }
+}

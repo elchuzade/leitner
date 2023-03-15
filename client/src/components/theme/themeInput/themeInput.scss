@@ -64,4 +64,16 @@
       background: $theme-white-hover;
     }
   }
+
+  &-transparent {
+    background: $theme-transparent;
+    box-shadow: none;
+    color: $theme-dark;
+
+    &:hover {
+      background: $theme-transparent-hover;
+      box-shadow: none;
+      color: $theme-black;
+    }
+  }
 }

@@ -5,7 +5,8 @@ type ThemeColor =
   | "theme-blue"
   | "theme-yellow"
   | "theme-black"
-  | "theme-white";
+  | "theme-white"
+  | "theme-transparent";
 
 type BoxProps = {
   m?: string;
