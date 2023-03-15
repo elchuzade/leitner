@@ -73,6 +73,14 @@
     }
   }
 
+  &-red {
+    background: $theme-red;
+    color: white;
+    &:hover {
+      background: $theme-red-hover;
+    }
+  }
+
   &-black {
     background: $theme-black;
     color: white;

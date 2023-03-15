@@ -4,6 +4,7 @@ type ThemeColor =
   | "theme-green"
   | "theme-blue"
   | "theme-yellow"
+  | "theme-red"
   | "theme-black"
   | "theme-white"
   | "theme-transparent";

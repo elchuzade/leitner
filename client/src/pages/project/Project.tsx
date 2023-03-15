@@ -48,7 +48,7 @@ const Project = ({}: Props) => {
             >
               Edit
             </ThemeButton>
-            <ThemeButton small color="theme-dark">
+            <ThemeButton small color="theme-red">
               Delete
             </ThemeButton>
           </div>
