@@ -3,13 +3,27 @@ import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
+import { LeitnerIcon } from "../../components/leitnerIcon/LeitnerIcon";
 
 const Register = () => {
   return (
     <div className="wrapper wrapper-flex">
-      <TopNavigation logo backLink="/" />
+      <TopNavigation>
+        <ThemeButton
+          link="/"
+          small
+          color="theme-light"
+          shadow
+          style={{ marginRight: "auto" }}
+        >
+          {"<"}
+        </ThemeButton>
+        <ThemeButton link="/" style={{ padding: 0 }}>
+          <LeitnerIcon width={32} height={40} />
+        </ThemeButton>
+      </TopNavigation>
       <div className="register">
-        <ThemeTitle title="Register" />
+        <ThemeTitle>Register</ThemeTitle>
         <ThemeInput
           onChange={() => {}}
           type="name"
@@ -39,13 +53,9 @@ const Register = () => {
         />
       </div>
       <BottomNavigation>
-        <ThemeButton
-          onClick={() => {}}
-          text="Register"
-          color="theme-blue"
-          shadow
-          fill
-        />
+        <ThemeButton onClick={() => {}} color="theme-blue" shadow fill>
+          Register
+        </ThemeButton>
       </BottomNavigation>
     </div>
   );

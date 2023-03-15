@@ -1,12 +1,12 @@
 interface Props extends BoxProps {
-  title: string;
+  children: React.ReactNode | React.ReactNode[];
   textAlign?: "left" | "center" | "right";
 }
 
-const ThemeTitle = ({ title, textAlign = "left" }: Props) => {
+const ThemeTitle = ({ children, textAlign = "left" }: Props) => {
   return (
     <h3 className="title" style={{ textAlign: textAlign }}>
-      {title}
+      {children}
     </h3>
   );
 };

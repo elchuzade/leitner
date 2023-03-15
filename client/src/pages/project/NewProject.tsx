@@ -7,13 +7,23 @@ import BottomNavigation from "../../components/bottomNavigation/BottomNavigation
 
 interface Props {}
 
-const AddNewProject = ({}: Props) => {
+const NewProject = ({}: Props) => {
   return (
     <div className="wrapper wrapper-flex">
-      <TopNavigation logo backLink="/me" />
+      <TopNavigation>
+        <ThemeButton
+          link="/me"
+          small
+          color="theme-light"
+          shadow
+          style={{ marginRight: "auto" }}
+        >
+          {"<"}
+        </ThemeButton>
+      </TopNavigation>
       <div className="project">
         <div className="project-new">
-          <ThemeTitle title="Add Project" />
+          <ThemeTitle>Add Project</ThemeTitle>
           <ThemeInput
             onChange={() => {}}
             type="title"
@@ -34,19 +44,13 @@ const AddNewProject = ({}: Props) => {
           />
         </div>
       </div>
-      <BottomNavigation
-        children={[
-          <ThemeButton
-            onClick={() => {}}
-            text="Save"
-            color="theme-blue"
-            shadow
-            fill
-          />,
-        ]}
-      />
+      <BottomNavigation>
+        <ThemeButton onClick={() => {}} color="theme-blue" shadow fill>
+          Save
+        </ThemeButton>
+      </BottomNavigation>
     </div>
   );
 };
 
-export default AddNewProject;
+export default NewProject;

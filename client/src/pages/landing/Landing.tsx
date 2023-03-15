@@ -9,27 +9,27 @@ const Landing = () => {
       <div className="landing">
         <LeitnerLogo />
         <Signature />
-        <BottomNavigation
-          children={[
-            <ThemeButton
-              link="/login"
-              text="Login"
-              outline
-              color="theme-white"
-              shadow
-              fill
-              style={{ marginRight: "8px" }}
-            />,
-            <ThemeButton
-              link="/register"
-              text="Register"
-              color="theme-blue"
-              shadow
-              fill
-              style={{ marginLeft: "8px" }}
-            />,
-          ]}
-        />
+        <BottomNavigation>
+          <ThemeButton
+            link="/login"
+            outline
+            color="theme-white"
+            shadow
+            fill
+            style={{ marginRight: "8px" }}
+          >
+            Login
+          </ThemeButton>
+          <ThemeButton
+            link="/register"
+            color="theme-blue"
+            shadow
+            fill
+            style={{ marginLeft: "8px" }}
+          >
+            Register
+          </ThemeButton>
+        </BottomNavigation>
       </div>
     </div>
   );

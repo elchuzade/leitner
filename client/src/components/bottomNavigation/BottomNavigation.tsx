@@ -5,9 +5,7 @@ interface Props {
 const BottomNavigation = ({ children }: Props) => {
   return (
     <div className="wrapper-bottom">
-      <div className="navigation-bottom">
-        {Array.isArray(children) ? children?.map((child) => child) : children}
-      </div>
+      <div className="navigation-bottom">{children}</div>
     </div>
   );
 };

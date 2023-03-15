@@ -18,16 +18,17 @@ const Profile = ({}: Props) => {
       <div className="profile">
         <div className="profile-header">
           <img src={avatar} alt="avatar" className="profile-img" />
-          <p className="profile-title">{name}</p>
+          <p>{name}</p>
         </div>
         <div className="profile-title">
-          <ThemeTitle title="Projects" />
+          <ThemeTitle>Projects</ThemeTitle>
           <ThemeButton
             link="/project"
-            text={"+ Add New"}
             color="theme-transparent"
-            style={{ width: "120px", padding: "12px 0px" }}
-          />
+            style={{ width: "180px", padding: "12px 0px" }}
+          >
+            + Add Project
+          </ThemeButton>
         </div>
         <div className="profile-projects">
           {projects.map((project: any) => (

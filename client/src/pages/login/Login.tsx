@@ -3,13 +3,27 @@ import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
+import { LeitnerIcon } from "../../components/leitnerIcon/LeitnerIcon";
 
-const Landing = () => {
+const Login = () => {
   return (
     <div className="wrapper wrapper-flex">
-      <TopNavigation logo backLink="/" />
+      <TopNavigation>
+        <ThemeButton
+          link="/"
+          small
+          color="theme-light"
+          shadow
+          style={{ marginRight: "auto" }}
+        >
+          {"<"}
+        </ThemeButton>
+        <ThemeButton link="/" style={{ padding: 0 }}>
+          <LeitnerIcon width={32} height={40} />
+        </ThemeButton>
+      </TopNavigation>
       <div className="login">
-        <ThemeTitle title="Login" />
+        <ThemeTitle>Login</ThemeTitle>
         <ThemeInput
           onChange={() => {}}
           type="email"
@@ -29,19 +43,13 @@ const Landing = () => {
           style={{ marginBottom: "16px" }}
         />
       </div>
-      <BottomNavigation
-        children={[
-          <ThemeButton
-            onClick={() => {}}
-            text="Login"
-            color="theme-blue"
-            shadow
-            fill
-          />,
-        ]}
-      />
+      <BottomNavigation>
+        <ThemeButton onClick={() => {}} color="theme-blue" shadow fill>
+          Login
+        </ThemeButton>
+      </BottomNavigation>
     </div>
   );
 };
 
-export default Landing;
+export default Login;

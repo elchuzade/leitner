@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 interface Props extends BoxProps {
   small?: boolean;
-  text: String | React.ReactNode;
+  children: string | React.ReactNode | React.ReactNode[];
   outline?: boolean;
   color?: ThemeColor;
   shadow?: boolean;
@@ -15,7 +15,7 @@ interface Props extends BoxProps {
 
 const ThemeButton = ({
   small,
-  text,
+  children,
   outline,
   color,
   shadow,
@@ -49,14 +49,14 @@ const ThemeButton = ({
         className={`button-link ${classProps}`}
         style={styleProps}
       >
-        {text}
+        {children}
       </Link>
     );
   }
 
   return (
     <button onClick={onClick} className={classProps} style={styleProps}>
-      {text}
+      {children}
     </button>
   );
 };
