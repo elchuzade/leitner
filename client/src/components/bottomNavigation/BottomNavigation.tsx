@@ -1,26 +1,12 @@
-import ThemeButton from "../theme/themeButton/ThemeButton";
+interface Props {
+  children: React.ReactNode | React.ReactNode[];
+}
 
-const BottomNavigation = () => {
+const BottomNavigation = ({ children }: Props) => {
   return (
     <div className="wrapper-bottom">
       <div className="navigation-bottom">
-        <ThemeButton
-          link="/login"
-          text="Login"
-          outline
-          color="theme-white"
-          shadow
-          fill
-          style={{ marginRight: "8px" }}
-        />
-        <ThemeButton
-          link="/register"
-          text="Register"
-          color="theme-blue"
-          shadow
-          fill
-          style={{ marginLeft: "8px" }}
-        />
+        {Array.isArray(children) ? children?.map((child) => child) : children}
       </div>
     </div>
   );

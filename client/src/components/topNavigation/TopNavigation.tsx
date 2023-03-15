@@ -7,7 +7,7 @@ interface Props {
   backLink: string;
 }
 
-const BottomNavigation = ({ backLink }: Props) => {
+const TopNavigation = ({ backLink }: Props) => {
   return (
     <div className="wrapper-top">
       <div className="navigation-top">
@@ -29,4 +29,4 @@ const BottomNavigation = ({ backLink }: Props) => {
   );
 };
 
-export default BottomNavigation;
+export default TopNavigation;

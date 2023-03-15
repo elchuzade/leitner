@@ -2,6 +2,7 @@ import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
+import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
 
 const Landing = () => {
   return (
@@ -27,14 +28,18 @@ const Landing = () => {
           fill
           style={{ marginBottom: "16px" }}
         />
-        <ThemeButton
-          onClick={() => {}}
-          text="Login"
-          color="theme-blue"
-          shadow
-          fill
-        />
       </div>
+      <BottomNavigation
+        children={[
+          <ThemeButton
+            onClick={() => {}}
+            text="Login"
+            color="theme-blue"
+            shadow
+            fill
+          />,
+        ]}
+      />
     </div>
   );
 };

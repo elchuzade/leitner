@@ -6,6 +6,7 @@ import Landing from "./pages/landing/Landing";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Profile from "./pages/profile/Profile";
+import AddNewProject from "./pages/project/AddNewProject";
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -42,7 +43,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/me" element={<Profile />} />
-              <Route path="/project" element={<>new project</>} />
+              <Route path="/project" element={<AddNewProject />} />
               <Route path="/projects" element={<>my projects</>} />
               <Route path="/projects/:id" element={<>my project</>} />
               <Route path="/card" element={<>new card</>} />

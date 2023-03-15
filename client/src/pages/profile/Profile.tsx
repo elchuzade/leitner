@@ -23,6 +23,7 @@ const Profile = ({}: Props) => {
         <div className="profile-title">
           <ThemeTitle title="Projects" />
           <ThemeButton
+            link="/project"
             text={"+ Add New"}
             color="theme-transparent"
             style={{ width: "120px", padding: "12px 0px" }}

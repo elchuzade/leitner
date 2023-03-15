@@ -2,6 +2,7 @@ import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
+import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
 
 const Register = () => {
   return (
@@ -36,6 +37,8 @@ const Register = () => {
           fill
           style={{ marginBottom: "16px" }}
         />
+      </div>
+      <BottomNavigation>
         <ThemeButton
           onClick={() => {}}
           text="Register"
@@ -43,7 +46,7 @@ const Register = () => {
           shadow
           fill
         />
-      </div>
+      </BottomNavigation>
     </div>
   );
 };
