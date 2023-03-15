@@ -1,4 +1,4 @@
-import ThemeButton from "../themeButton/ThemeButton";
+import ThemeButton from "../theme/themeButton/ThemeButton";
 
 const BottomNavigation = () => {
   return (

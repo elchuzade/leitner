@@ -4,6 +4,7 @@ import "./App.scss";
 
 import Landing from "./pages/landing/Landing";
 import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -38,7 +39,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<>register</>} />
+              <Route path="/register" element={<Register />} />
               <Route path="/profiles/:id" element={<>my profile</>} />
               <Route path="/project" element={<>new project</>} />
               <Route path="/projects" element={<>my projects</>} />

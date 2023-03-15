@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
-interface Props {
+interface Props extends BoxProps {
+  small?: boolean;
   text: String | React.ReactNode;
   outline?: boolean;
   color?: ThemeColor;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const ThemeButton = ({
+  small,
   text,
   outline,
   color,
@@ -32,7 +34,8 @@ const ThemeButton = ({
 
   const classProps = `button ${outline ? "button-outline" : ""} ${
     shadow ? "button-shadow" : ""
-  } ${getButtonColor(color) || ""} ${className || ""}`;
+  } ${small ? "button-small" : ""}
+   ${getButtonColor(color) || ""} ${className || ""}`;
 
   const styleProps = {
     width: fill ? "100%" : "auto",

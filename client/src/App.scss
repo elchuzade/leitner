@@ -2,8 +2,10 @@
 @import "./assets/styles/common.scss";
 
 @import "./components/signature/signature.scss";
-@import "./components/themeButton/themeButton.scss";
-@import "./components/themeInput/themeInput.scss";
+@import "./components/theme/themeButton/themeButton.scss";
+@import "./components/theme/themeInput/themeInput.scss";
+@import "./components/theme/themeTitle/themeTitle.scss";
 
 @import "./pages/landing/landing.scss";
+@import "./pages/register/register.scss";
 @import "./pages/login/login.scss";

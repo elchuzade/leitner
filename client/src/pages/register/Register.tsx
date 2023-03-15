@@ -3,12 +3,21 @@ import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 
-const Landing = () => {
+const Register = () => {
   return (
     <div className="wrapper wrapper-flex">
       <TopNavigation logo backLink="/" />
-      <div className="login">
-        <ThemeTitle title="Login" />
+      <div className="register">
+        <ThemeTitle title="Register" />
+        <ThemeInput
+          onChange={() => {}}
+          type="name"
+          placeholder="name"
+          color="theme-white"
+          shadow
+          fill
+          style={{ marginBottom: "16px" }}
+        />
         <ThemeInput
           onChange={() => {}}
           type="email"
@@ -29,7 +38,7 @@ const Landing = () => {
         />
         <ThemeButton
           onClick={() => {}}
-          text="Login"
+          text="Register"
           color="theme-blue"
           shadow
           fill
@@ -39,4 +48,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default Register;

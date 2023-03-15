@@ -7,6 +7,14 @@
   font-size: 16px;
   border: 1px solid transparent;
   color: black;
+  height: 44px;
+
+  &-small {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    height: 32px;
+  }
 
   &-link {
     text-decoration: none;
@@ -64,6 +72,7 @@
 
   &-black {
     background: $theme-black;
+    color: white;
     &:hover {
       background: $theme-black-hover;
     }
