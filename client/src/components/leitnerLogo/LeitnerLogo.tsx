@@ -1,11 +1,14 @@
 import { SVGProps } from "react";
 
-interface Props extends SVGProps<SVGSVGElement> {}
+interface Props extends SVGProps<SVGSVGElement> {
+  width?: number;
+  height?: number;
+}
 
 const LeitnerLogo = (props: Props) => (
   <svg
-    width={225}
-    height={86}
+    width={props.width || 225}
+    height={props.height || 86}
     viewBox="0 0 225 86"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

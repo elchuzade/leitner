@@ -1,4 +1,3 @@
-import React from "react";
 import { LeitnerLogo } from "../../components/leitnerLogo/LeitnerLogo";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
 import Signature from "../../components/signature/Signature";

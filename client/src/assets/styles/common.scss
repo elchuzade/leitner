@@ -2,16 +2,35 @@ body {
   background-color: $theme-dark;
 }
 
+input {
+  &:focus {
+    outline: none;
+  }
+}
+
 .wrapper {
   min-height: 100vh;
   background: linear-gradient($gradient-blue, $gradient-pink);
+  display: block;
+
+  &-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   &-bottom {
-    display: block;
     position: absolute;
     bottom: 0;
     width: 100%;
     height: 80px;
+  }
+
+  &-top {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 56px;
   }
 }
 
@@ -19,6 +38,12 @@ body {
   &-bottom {
     display: flex;
     margin: 16px;
+    justify-content: space-between;
+  }
+
+  &-top {
+    display: flex;
+    margin: 8px;
     justify-content: space-between;
   }
 }
