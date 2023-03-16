@@ -9,7 +9,7 @@ const ThemeTitle = ({ children, textAlign = "left", tail, style }: Props) => {
   return (
     <h3 className="title" style={{ textAlign: textAlign, ...style }}>
       {children}
-      <span style={{ float: "right" }}>{tail}</span>
+      <span style={{ marginLeft: "auto" }}>{tail}</span>
     </h3>
   );
 };

@@ -10,7 +10,12 @@ interface Props {}
 const Card = ({}: Props) => {
   let { id, cardId } = useParams();
 
-  const [card, setCard] = useState<any>({});
+  const [card, setCard] = useState<any>({
+    title: "Parkieren",
+    hint: "For cards",
+    description: "When you stop the car somewhere, the action that you perfom",
+    answer: "To park",
+  });
 
   useEffect(() => {
     console.log(id, cardId);
@@ -38,12 +43,21 @@ const Card = ({}: Props) => {
         >
           <IoChevronBackOutline />
         </ThemeButton>
-        <ThemeButton link="/projects/123/card" small color="theme-light" shadow>
+        <ThemeButton
+          link="/projects/123/card/12"
+          small
+          color="theme-light"
+          icon
+          shadow
+        >
           <HiOutlinePencil />
         </ThemeButton>
       </TopNavigation>
       <div className="wrapper-top-navigation">
         <div className="card-sections">{RenderCardSection("title")}</div>
+        <div className="card-sections">{RenderCardSection("hint")}</div>
+        <div className="card-sections">{RenderCardSection("description")}</div>
+        <div className="card-sections">{RenderCardSection("answer")}</div>
       </div>
     </div>
   );

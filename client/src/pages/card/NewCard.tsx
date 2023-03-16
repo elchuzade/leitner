@@ -39,7 +39,7 @@ const NewCard = ({}: Props) => {
       <div className="wrapper-top-navigation">
         <div className="card">
           <div className="card-new">
-            <ThemeTitle>Add Card</ThemeTitle>
+            <ThemeTitle>{cardId ? "Edit" : "Add"} Card</ThemeTitle>
             <ThemeInput
               value={title}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

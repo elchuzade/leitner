@@ -37,7 +37,7 @@ const NewProject = ({}: Props) => {
       <div className="wrapper-top-navigation">
         <div className="project">
           <div className="project-new">
-            <ThemeTitle>Add Project</ThemeTitle>
+            <ThemeTitle>{id ? "Edit" : "Add"} Project</ThemeTitle>
             <ThemeInput
               value={title}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
