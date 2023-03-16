@@ -2,6 +2,10 @@ body {
   background-color: $theme-dark;
 }
 
+a {
+  text-decoration: none;
+}
+
 input,
 textarea {
   &:focus {
@@ -31,7 +35,12 @@ textarea {
     position: absolute;
     top: 0;
     width: 100%;
-    height: 56px;
+    height: $wrapper-top-height;
+
+    &-navigation {
+      padding: 16px;
+      padding-top: $wrapper-top-height;
+    }
   }
 }
 

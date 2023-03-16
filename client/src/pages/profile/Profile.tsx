@@ -20,16 +20,19 @@ const Profile = ({}: Props) => {
           <img src={avatar} alt="avatar" className="profile-img" />
           <p>{name}</p>
         </div>
-        <div className="profile-title">
-          <ThemeTitle>Projects</ThemeTitle>
-          <ThemeButton
-            link="/project"
-            color="theme-transparent"
-            style={{ width: "180px", padding: "12px 0px" }}
-          >
-            + Add Project
-          </ThemeButton>
-        </div>
+        <ThemeTitle
+          tail={
+            <ThemeButton
+              link="/project"
+              color="theme-transparent"
+              style={{ padding: "12px 0px" }}
+            >
+              + Add Project
+            </ThemeButton>
+          }
+        >
+          Projects
+        </ThemeTitle>
         <div className="profile-projects">
           {projects.map((project: any) => (
             <ProjectItem key={project.id} project={project} />

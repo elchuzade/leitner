@@ -1,16 +1,18 @@
 interface Props extends BoxProps {
+  value: string;
   placeholder?: string;
   outline?: boolean;
   color?: ThemeColor;
   shadow?: boolean;
   fill?: boolean;
   rows?: number;
-  onChange?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   className?: string;
-  style?: {};
+  style?: React.CSSProperties;
 }
 
 const ThemeTextarea = ({
+  value,
   placeholder,
   outline,
   color,
@@ -39,6 +41,7 @@ const ThemeTextarea = ({
 
   return (
     <textarea
+      value={value}
       placeholder={placeholder}
       onChange={onChange}
       className={classProps}

@@ -1,16 +1,18 @@
 interface Props extends BoxProps {
+  value: string;
   type: string;
   placeholder?: string;
   outline?: boolean;
   color?: ThemeColor;
   shadow?: boolean;
   fill?: boolean;
-  onChange?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  style?: {};
+  style?: React.CSSProperties;
 }
 
 const ThemeInput = ({
+  value,
   type,
   placeholder,
   outline,
@@ -39,6 +41,7 @@ const ThemeInput = ({
 
   return (
     <input
+      value={value}
       type={type}
       placeholder={placeholder}
       onChange={onChange}
