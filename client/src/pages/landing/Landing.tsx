@@ -1,6 +1,6 @@
-import React from "react";
 import { LeitnerLogo } from "../../components/leitnerLogo/LeitnerLogo";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
+import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import Signature from "../../components/signature/Signature";
 
 const Landing = () => {
@@ -9,7 +9,27 @@ const Landing = () => {
       <div className="landing">
         <LeitnerLogo />
         <Signature />
-        <BottomNavigation />
+        <BottomNavigation>
+          <ThemeButton
+            link="/login"
+            outline
+            color="theme-white"
+            shadow
+            fill
+            style={{ marginRight: "8px" }}
+          >
+            Login
+          </ThemeButton>
+          <ThemeButton
+            link="/register"
+            color="theme-blue"
+            shadow
+            fill
+            style={{ marginLeft: "8px" }}
+          >
+            Register
+          </ThemeButton>
+        </BottomNavigation>
       </div>
     </div>
   );

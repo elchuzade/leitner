@@ -1,5 +1,3 @@
-import React from "react";
-
 const Signature = () => {
   return (
     <div className="wrapper-signature">
