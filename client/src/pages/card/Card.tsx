@@ -4,6 +4,7 @@ import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { HiOutlinePencil } from "react-icons/hi";
+import CardSection from "../../components/card/cardSection/CardSection";
 
 interface Props {}
 
@@ -20,15 +21,6 @@ const Card = ({}: Props) => {
   useEffect(() => {
     console.log(id, cardId);
   }, [id, cardId]);
-
-  const RenderCardSection = (section: string) => {
-    return (
-      <div className="card-section">
-        <div className="card-section-title">{section.toUpperCase()}</div>
-        <div className="card-section-content">{card[section]}</div>
-      </div>
-    );
-  };
 
   return (
     <div className="wrapper">
@@ -54,10 +46,12 @@ const Card = ({}: Props) => {
         </ThemeButton>
       </TopNavigation>
       <div className="wrapper-top-navigation">
-        <div className="card-sections">{RenderCardSection("title")}</div>
-        <div className="card-sections">{RenderCardSection("hint")}</div>
-        <div className="card-sections">{RenderCardSection("description")}</div>
-        <div className="card-sections">{RenderCardSection("answer")}</div>
+        <div className="card-sections">
+          <CardSection section="title" card={card} />
+          <CardSection section="hint" card={card} />
+          <CardSection section="description" card={card} />
+          <CardSection section="answer" card={card} />
+        </div>
       </div>
     </div>
   );

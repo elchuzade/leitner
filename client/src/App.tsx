@@ -12,6 +12,7 @@ import Project from "./pages/project/Project";
 import NewCard from "./pages/card/NewCard";
 import Cards from "./pages/card/Cards";
 import Card from "./pages/card/Card";
+import Practice from "./pages/practice/Practice";
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -55,6 +56,7 @@ function App() {
               <Route path="/projects/:id/card/:cardId" element={<NewCard />} />
               <Route path="/projects/:id/cards" element={<Cards />} />
               <Route path="/projects/:id/cards/:id" element={<Card />} />
+              <Route path="/projects/:id/practice" element={<Practice />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
