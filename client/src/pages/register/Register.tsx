@@ -6,11 +6,26 @@ import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
 import { LeitnerIcon } from "../../components/leitnerIcon/LeitnerIcon";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { useMutation } from "@apollo/client";
+import { SIGNUP } from "../../mutations/authMutations";
 
 const Register = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const [signup] = useMutation(SIGNUP, {
+    variables: { name, email, password },
+  });
+
+  const onSignup = async () => {
+    if (email && password) {
+      const res = await signup();
+      if (res.data.signup.token) {
+        localStorage.setItem("token", res.data.signup.token);
+      }
+    }
+  };
 
   return (
     <div className="wrapper wrapper-flex">
@@ -71,7 +86,7 @@ const Register = () => {
         </div>
       </div>
       <BottomNavigation>
-        <ThemeButton onClick={() => {}} color="theme-blue" shadow fill>
+        <ThemeButton onClick={onSignup} color="theme-blue" shadow fill>
           Register
         </ThemeButton>
       </BottomNavigation>
