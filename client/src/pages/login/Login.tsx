@@ -6,10 +6,25 @@ import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
 import { LeitnerIcon } from "../../components/leitnerIcon/LeitnerIcon";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { useMutation } from "@apollo/client";
+import { SIGNIN } from "../../mutations/authMutations";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const [signin] = useMutation(SIGNIN, {
+    variables: { email, password },
+  });
+
+  const onSignin = async () => {
+    if (email && password) {
+      const res = await signin();
+      if (res.data.signin.token) {
+        localStorage.setItem("token", res.data.signin.token);
+      }
+    }
+  };
 
   return (
     <div className="wrapper wrapper-flex">
@@ -58,7 +73,7 @@ const Login = () => {
         </div>
       </div>
       <BottomNavigation>
-        <ThemeButton onClick={() => {}} color="theme-blue" shadow fill>
+        <ThemeButton onClick={onSignin} color="theme-blue" shadow fill>
           Login
         </ThemeButton>
       </BottomNavigation>

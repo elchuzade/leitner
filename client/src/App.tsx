@@ -1,5 +1,12 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import {
+  ApolloProvider,
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+
 import "./App.scss";
 
 import Landing from "./pages/landing/Landing";
@@ -18,7 +25,7 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        clients: {
+        profile: {
           merge(existing: any, incoming: any) {
             return incoming;
           },
@@ -28,13 +35,34 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
+        cards: {
+          merge(existing: any, incoming: any) {
+            return incoming;
+          },
+        },
       },
     },
   },
 });
 
-const client = new ApolloClient({
+const httpLink = createHttpLink({
   uri: "http://localhost:5001/graphql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem("token");
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `${token}` : "",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
   cache,
 });
 
