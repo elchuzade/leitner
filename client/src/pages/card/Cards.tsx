@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
@@ -6,39 +7,17 @@ import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import CardItem from "../../components/card/cardItem/CardItem";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoChevronBackOutline } from "react-icons/io5";
-
-type ShowCards = [boolean, boolean, boolean, boolean, boolean, boolean];
+import { GET_CARDS } from "../../queries/cardQueries";
+import { useQuery } from "@apollo/client";
+import { filterCards } from "../../utils/cardsUtils";
 
 interface Props {}
 
 const Cards = ({}: Props) => {
+  let { projectId } = useParams();
+
   const [searchCardText, setSearchCardText] = useState<string>("");
-  const [cards, setCards] = useState<any[]>([
-    {
-      id: 1,
-      title: "title",
-      description: "description",
-      stage: "1",
-      hint: "hint",
-      answer: "answer",
-    },
-    {
-      id: 2,
-      title: "title 2",
-      description: "description 2",
-      stage: "1",
-      hint: "hint 2",
-      answer: "answer 2",
-    },
-    {
-      id: 3,
-      title: "title 3",
-      description: "description 3",
-      stage: "2",
-      hint: "hint 3",
-      answer: "answer 3",
-    },
-  ]);
+  const [cards, setCards] = useState<Card[]>([]);
   const [showCards, setShowCards] = useState<ShowCards>([
     true,
     true,
@@ -48,6 +27,14 @@ const Cards = ({}: Props) => {
     true,
   ]);
 
+  const cardsRes = useQuery(GET_CARDS, {
+    variables: { projectId },
+  });
+
+  useEffect(() => {
+    setCards(cardsRes?.data?.cards || []);
+  }, [cardsRes]);
+
   const FlipShowStageCards = (stage: number) => {
     let modifiedShowCards: ShowCards = [...showCards];
     modifiedShowCards[stage - 1] = !modifiedShowCards[stage - 1];
@@ -55,7 +42,8 @@ const Cards = ({}: Props) => {
   };
 
   const RenderCardsStage = (stage: number) => {
-    const filteredCards: any[] = cards.filter((c) => c.stage === `${stage}`);
+    const filteredCards: Card[] = filterCards(cards, stage);
+
     return (
       <div className="cards-stage">
         <div className="cards-stage-header">
@@ -68,7 +56,7 @@ const Cards = ({}: Props) => {
           >
             Stage {stage}
           </ThemeTitle>
-          {filteredCards.length > 0 && (
+          {filteredCards?.length > 0 && (
             <>
               {" "}
               <div
@@ -79,8 +67,8 @@ const Cards = ({}: Props) => {
                   marginRight: "8px",
                 }}
               >
-                {filteredCards.length}{" "}
-                {filteredCards.length === 1 ? "card" : "cards"}
+                {filteredCards?.length}{" "}
+                {filteredCards?.length === 1 ? "card" : "cards"}
               </div>
               <ThemeButton
                 shadow
@@ -98,10 +86,10 @@ const Cards = ({}: Props) => {
             </>
           )}
         </div>
-        {showCards[stage - 1] && filteredCards.length > 0 && (
+        {showCards[stage - 1] && filteredCards?.length > 0 && (
           <div className="cards-stage-cards">
-            {filteredCards.map((card) => (
-              <CardItem key={card.id} project={{ id: "123" }} card={card} />
+            {filteredCards?.map((card) => (
+              <CardItem key={card.id} project={{ id: projectId }} card={card} />
             ))}
           </div>
         )}
@@ -113,7 +101,7 @@ const Cards = ({}: Props) => {
     <div className="wrapper">
       <TopNavigation>
         <ThemeButton
-          link="/projects/123"
+          link={`/projects/${projectId}`}
           small
           color="theme-light"
           shadow
@@ -122,14 +110,19 @@ const Cards = ({}: Props) => {
         >
           <IoChevronBackOutline />
         </ThemeButton>
-        <ThemeButton link="/projects/123/card" small color="theme-green" shadow>
+        <ThemeButton
+          link={`/projects/${projectId}/card`}
+          small
+          color="theme-green"
+          shadow
+        >
           + Add Card
         </ThemeButton>
       </TopNavigation>
       <div className="wrapper-top-navigation">
         <div className="cards">
           <div className="cards-search">
-            <ThemeTitle tail={cards.length}>Project Cards</ThemeTitle>
+            <ThemeTitle tail={cards?.length}>Project Cards</ThemeTitle>
             <ThemeInput
               value={searchCardText}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

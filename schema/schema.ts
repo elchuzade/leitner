@@ -10,7 +10,7 @@ const {
   GraphQLObjectType,
   GraphQLID,
   GraphQLString,
-  GraphQLNumber,
+  GraphQLInt,
   GraphQLBoolean,
   GraphQLSchema,
   GraphQLList,
@@ -76,7 +76,7 @@ const CardType = new GraphQLObjectType({
   name: "Card",
   fields: () => ({
     id: { type: GraphQLID },
-    stage: { type: GraphQLNonNull(GraphQLString) },
+    stage: { type: GraphQLInt },
     title: { type: GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },
     hint: { type: GraphQLString },
@@ -113,15 +113,15 @@ const RootQuery = new GraphQLObjectType({
         return Project.find({ user: userPayload.id });
       },
     },
-    // Get project based on id
+    // Get project based on projectId
     project: {
       type: ProjectType,
-      args: { id: { type: GraphQLID } },
+      args: { projectId: { type: GraphQLID } },
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
 
-        const project = await Project.findById(args.id);
+        const project = await Project.findById(args.projectId);
         if (JSON.stringify(project.user) !== JSON.stringify(userPayload.id)) {
           throw new GraphQLError("Could not get project. Unathorized.", {
             extensions: { code: "" },
@@ -141,15 +141,15 @@ const RootQuery = new GraphQLObjectType({
         return Card.find({ project: args.projectId, user: userPayload.id });
       },
     },
-    // Get a card based on id
+    // Get a card based on cardId
     card: {
       type: CardType,
-      args: { id: { type: GraphQLID } },
+      args: { cardId: { type: GraphQLID } },
       async resolve(parent: any, args: any, context: any) {
         const token = context?.headers?.authorization;
         const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
 
-        const card = await Card.findById(args.id);
+        const card = await Card.findById(args.cardId);
         if (JSON.stringify(card.user) !== JSON.stringify(userPayload.id)) {
           throw new GraphQLError("Could not get card. Unathorized.", {
             extensions: { code: "" },
@@ -392,7 +392,7 @@ const mutation = new GraphQLObjectType({
         description: { type: GraphQLString },
         hint: { type: GraphQLString },
         answer: { type: GraphQLString },
-        stage: { type: GraphQLNonNull(GraphQLString) },
+        stage: { type: GraphQLInt },
         projectId: { type: GraphQLNonNull(GraphQLID) },
       },
       async resolve(parent: any, args: any, context: any) {
@@ -426,7 +426,7 @@ const mutation = new GraphQLObjectType({
             description: args.description,
             hint: args.hint,
             answer: args.answer,
-            stage: args.stage,
+            stage: args.stage || 1,
             user: user._id,
             project: project._id,
           });
@@ -447,7 +447,7 @@ const mutation = new GraphQLObjectType({
         description: { type: GraphQLString },
         hint: { type: GraphQLString },
         answer: { type: GraphQLString },
-        stage: { type: GraphQLNonNull(GraphQLString) },
+        stage: { type: GraphQLInt },
         cardId: { type: GraphQLNonNull(GraphQLID) },
       },
       async resolve(parent: any, args: any, context: any) {
@@ -490,7 +490,7 @@ const mutation = new GraphQLObjectType({
           card.description = args.description;
           card.hint = args.hint;
           card.answer = args.answer;
-          card.stage = args.stage;
+          card.stage = args.stage || 1;
 
           return card.save();
         } catch (error) {

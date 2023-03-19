@@ -11,7 +11,7 @@ import { IoChevronBackOutline } from "react-icons/io5";
 interface Props {}
 
 const NewCard = ({}: Props) => {
-  const { id, cardId } = useParams();
+  const { projectId, cardId } = useParams();
 
   const [title, setTitle] = useState<string>("");
   const [hint, setHint] = useState<string>("");
@@ -19,14 +19,14 @@ const NewCard = ({}: Props) => {
   const [answer, setAnswer] = useState<string>("");
 
   useEffect(() => {
-    console.log(id, cardId);
-  }, [id, cardId]);
+    console.log(projectId, cardId);
+  }, [projectId, cardId]);
 
   return (
     <div className="wrapper wrapper-flex">
       <TopNavigation>
         <ThemeButton
-          link="/projects/123/cards"
+          link={`/projects/${projectId}/cards`}
           small
           color="theme-light"
           shadow

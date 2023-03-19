@@ -15,7 +15,7 @@ const User = require("../models/User");
 const Profile = require("../models/Profile");
 const Project = require("../models/Project");
 const Card = require("../models/Card");
-const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLNumber, GraphQLBoolean, GraphQLSchema, GraphQLList, GraphQLNonNull, GraphQLEnumType, GraphQLError, } = require("graphql");
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLSchema, GraphQLList, GraphQLNonNull, GraphQLEnumType, GraphQLError, } = require("graphql");
 // User Type
 const UserType = new GraphQLObjectType({
     name: "User",
@@ -69,7 +69,7 @@ const CardType = new GraphQLObjectType({
     name: "Card",
     fields: () => ({
         id: { type: GraphQLID },
-        stage: { type: GraphQLNonNull(GraphQLString) },
+        stage: { type: GraphQLInt },
         title: { type: GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLString },
         hint: { type: GraphQLString },
@@ -107,16 +107,16 @@ const RootQuery = new GraphQLObjectType({
                 return Project.find({ user: userPayload.id });
             },
         },
-        // Get project based on id
+        // Get project based on projectId
         project: {
             type: ProjectType,
-            args: { id: { type: GraphQLID } },
+            args: { projectId: { type: GraphQLID } },
             resolve(parent, args, context) {
                 var _a;
                 return __awaiter(this, void 0, void 0, function* () {
                     const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
                     const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
-                    const project = yield Project.findById(args.id);
+                    const project = yield Project.findById(args.projectId);
                     if (JSON.stringify(project.user) !== JSON.stringify(userPayload.id)) {
                         throw new GraphQLError("Could not get project. Unathorized.", {
                             extensions: { code: "" },
@@ -137,16 +137,16 @@ const RootQuery = new GraphQLObjectType({
                 return Card.find({ project: args.projectId, user: userPayload.id });
             },
         },
-        // Get a card based on id
+        // Get a card based on cardId
         card: {
             type: CardType,
-            args: { id: { type: GraphQLID } },
+            args: { cardId: { type: GraphQLID } },
             resolve(parent, args, context) {
                 var _a;
                 return __awaiter(this, void 0, void 0, function* () {
                     const token = (_a = context === null || context === void 0 ? void 0 : context.headers) === null || _a === void 0 ? void 0 : _a.authorization;
                     const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
-                    const card = yield Card.findById(args.id);
+                    const card = yield Card.findById(args.cardId);
                     if (JSON.stringify(card.user) !== JSON.stringify(userPayload.id)) {
                         throw new GraphQLError("Could not get card. Unathorized.", {
                             extensions: { code: "" },
@@ -380,7 +380,7 @@ const mutation = new GraphQLObjectType({
                 description: { type: GraphQLString },
                 hint: { type: GraphQLString },
                 answer: { type: GraphQLString },
-                stage: { type: GraphQLNonNull(GraphQLString) },
+                stage: { type: GraphQLInt },
                 projectId: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args, context) {
@@ -413,7 +413,7 @@ const mutation = new GraphQLObjectType({
                             description: args.description,
                             hint: args.hint,
                             answer: args.answer,
-                            stage: args.stage,
+                            stage: args.stage || 1,
                             user: user._id,
                             project: project._id,
                         });
@@ -435,7 +435,7 @@ const mutation = new GraphQLObjectType({
                 description: { type: GraphQLString },
                 hint: { type: GraphQLString },
                 answer: { type: GraphQLString },
-                stage: { type: GraphQLNonNull(GraphQLString) },
+                stage: { type: GraphQLInt },
                 cardId: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args, context) {
@@ -476,7 +476,7 @@ const mutation = new GraphQLObjectType({
                         card.description = args.description;
                         card.hint = args.hint;
                         card.answer = args.answer;
-                        card.stage = args.stage;
+                        card.stage = args.stage || 1;
                         return card.save();
                     }
                     catch (error) {

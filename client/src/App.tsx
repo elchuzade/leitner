@@ -78,13 +78,22 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/me" element={<Profile />} />
               <Route path="/project" element={<NewProject />} />
-              <Route path="/project/:id" element={<NewProject />} />
-              <Route path="/projects/:id" element={<Project />} />
-              <Route path="/projects/:id/card" element={<NewCard />} />
-              <Route path="/projects/:id/card/:cardId" element={<NewCard />} />
-              <Route path="/projects/:id/cards" element={<Cards />} />
-              <Route path="/projects/:id/cards/:id" element={<Card />} />
-              <Route path="/projects/:id/practice" element={<Practice />} />
+              <Route path="/project/:projectId" element={<NewProject />} />
+              <Route path="/projects/:projectId" element={<Project />} />
+              <Route path="/projects/:projectId/card" element={<NewCard />} />
+              <Route
+                path="/projects/:projectId/card/:cardId"
+                element={<NewCard />}
+              />
+              <Route path="/projects/:projectId/cards" element={<Cards />} />
+              <Route
+                path="/projects/:projectId/cards/:cardId"
+                element={<Card />}
+              />
+              <Route
+                path="/projects/:projectId/practice"
+                element={<Practice />}
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { GET_CARDS } from "../../../queries/cardQueries";
 import { useQuery } from "@apollo/client";
+import { filterCards } from "../../../utils/cardsUtils";
 
 interface Props {
   project: any;
@@ -23,9 +24,7 @@ const ProjectItem = ({ project }: Props) => {
       <div
         className="project-item-progress"
         style={{
-          width: `${
-            cards?.filter((c) => c.stage === "5").length / cards?.length
-          }%`,
+          width: `${filterCards(cards, 5)?.length / cards?.length}%`,
         }}
       />
       <div className="project-item-title">{project?.title}</div>

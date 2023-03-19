@@ -3,6 +3,7 @@ import { Schema, model } from "mongoose";
 const ProjectSchema = new Schema({
   title: {
     type: String,
+    required: true,
   },
   description: {
     type: String,

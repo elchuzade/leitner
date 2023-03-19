@@ -1,11 +1,19 @@
 type Card = {
   id: string;
   title: string;
-  stage: string;
+  stage: number;
   hint?: string;
   description?: string;
   answer?: string;
 };
+
+type Project = {
+  id: string;
+  title: string;
+  description?: string;
+};
+
+type ShowCards = [boolean, boolean, boolean, boolean, boolean, boolean];
 
 type ThemeColor =
   | "theme-light"

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsx_runtime_1 = require("react/jsx-runtime");
 const react_router_dom_1 = require("react-router-dom");
 const ThemeButton = ({ small, children, outline, color, shadow, fill, link, icon, onClick, className, style, }) => {
     const getButtonColor = (color) => {
@@ -11,12 +12,8 @@ const ThemeButton = ({ small, children, outline, color, shadow, fill, link, icon
     const classProps = `button ${outline ? "button-outline" : ""} ${shadow ? "button-shadow" : ""} ${small ? "button-small" : ""} ${getButtonColor(color) || ""} ${icon ? "button-icon" : ""} ${className || ""}`;
     const styleProps = Object.assign({ width: fill ? "100%" : "auto" }, style);
     if (link) {
-        return (<react_router_dom_1.Link to={link} className={`button-link ${classProps}`} style={styleProps}>
-        {children}
-      </react_router_dom_1.Link>);
+        return ((0, jsx_runtime_1.jsx)(react_router_dom_1.Link, Object.assign({ to: link, className: `button-link ${classProps}`, style: styleProps }, { children: children })));
     }
-    return (<button onClick={onClick} className={classProps} style={styleProps}>
-      {children}
-    </button>);
+    return ((0, jsx_runtime_1.jsx)("button", Object.assign({ onClick: onClick, className: classProps, style: styleProps }, { children: children })));
 };
 exports.default = ThemeButton;

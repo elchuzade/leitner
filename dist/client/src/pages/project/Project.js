@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsx_runtime_1 = require("react/jsx-runtime");
 const react_1 = require("react");
 const react_router_1 = require("react-router");
 const ThemeButton_1 = __importDefault(require("../../components/theme/themeButton/ThemeButton"));
@@ -10,51 +11,29 @@ const TopNavigation_1 = __importDefault(require("../../components/topNavigation/
 const ProjectStage_1 = __importDefault(require("../../components/project/projectStage/ProjectStage"));
 const BottomNavigation_1 = __importDefault(require("../../components/bottomNavigation/BottomNavigation"));
 const io5_1 = require("react-icons/io5");
+const projectQueries_1 = require("../../queries/projectQueries");
+const client_1 = require("@apollo/client");
+const cardsUtils_1 = require("../../utils/cardsUtils");
 const Project = ({}) => {
-    let { id } = (0, react_router_1.useParams)();
-    const [projectTitle, setProjectTitle] = (0, react_1.useState)("German Language A1");
-    const [projectInfo, setProjectInfo] = (0, react_1.useState)("we iowie fiwjf wjief jwiej oiwjfhewh rehguirhweuighuiehguheg oihwei hief hwio");
+    var _a, _b, _c, _d, _e, _f;
+    let { projectId } = (0, react_router_1.useParams)();
+    const [cards, setCards] = (0, react_1.useState)([]);
+    const [title, setTitle] = (0, react_1.useState)("");
+    const [description, setDescription] = (0, react_1.useState)("");
+    const projectRes = (0, client_1.useQuery)(projectQueries_1.GET_PROJECT, {
+        variables: { projectId },
+    });
+    // const cardsRes = useQuery(GET_CARDS, {
+    //   variables: { projectId },
+    // });
     (0, react_1.useEffect)(() => {
-        console.log(id);
-    }, [id]);
-    return (<div className="wrapper">
-      <TopNavigation_1.default>
-        <ThemeButton_1.default link="/me" small color="theme-light" shadow icon style={{ marginRight: "auto" }}>
-          <io5_1.IoChevronBackOutline />
-        </ThemeButton_1.default>
-        <ThemeButton_1.default link="/projects/123/cards" small color="theme-green" shadow>
-          Show All Cards
-        </ThemeButton_1.default>
-      </TopNavigation_1.default>
-      <div className="wrapper-top-navigation">
-        <div className="project">
-          <div className="project-stages">
-            <ProjectStage_1.default stage={1} cardsCount={15}/>
-            <ProjectStage_1.default stage={2} cardsCount={15}/>
-            <ProjectStage_1.default stage={3} cardsCount={15}/>
-            <ProjectStage_1.default stage={4} cardsCount={15}/>
-            <ProjectStage_1.default stage={5} cardsCount={15}/>
-            <ProjectStage_1.default stage={6} cardsCount={15}/>
-          </div>
-          <div className="project-info">
-            <div className="project-info-title">{projectTitle}</div>
-            <div className="project-info-description">{projectInfo}</div>
-            <div className="project-info-footer">
-              <ThemeButton_1.default small color="theme-dark" style={{ marginRight: "8px" }}>
-                Edit
-              </ThemeButton_1.default>
-              <ThemeButton_1.default small color="theme-red">
-                Delete
-              </ThemeButton_1.default>
-            </div>
-          </div>
-        </div>
-      </div>
-      <BottomNavigation_1.default>
-        <ThemeButton_1.default onClick={() => { }} color="theme-blue" shadow fill>
-          Practice
-        </ThemeButton_1.default>
-      </BottomNavigation_1.default>
-    </div>);
+        var _a, _b, _c, _d;
+        setTitle(((_b = (_a = projectRes === null || projectRes === void 0 ? void 0 : projectRes.data) === null || _a === void 0 ? void 0 : _a.project) === null || _b === void 0 ? void 0 : _b.title) || "");
+        setDescription(((_d = (_c = projectRes === null || projectRes === void 0 ? void 0 : projectRes.data) === null || _c === void 0 ? void 0 : _c.project) === null || _d === void 0 ? void 0 : _d.description) || "");
+    }, [projectRes]);
+    // useEffect(() => {
+    //   setCards(cardsRes?.data?.cards);
+    // }, [cardsRes]);
+    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper" }, { children: [(0, jsx_runtime_1.jsxs)(TopNavigation_1.default, { children: [(0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: "/me", small: true, color: "theme-light", shadow: true, icon: true, style: { marginRight: "auto" } }, { children: (0, jsx_runtime_1.jsx)(io5_1.IoChevronBackOutline, {}) })), (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: `/projects/${projectId}/cards`, small: true, color: "theme-green", shadow: true }, { children: "Show All Cards" }))] }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "project" }, { children: [(0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "project-stages" }, { children: [(0, jsx_runtime_1.jsx)(ProjectStage_1.default, { stage: 1, cardsCount: (_a = (0, cardsUtils_1.filterCards)(cards, 1)) === null || _a === void 0 ? void 0 : _a.length }), (0, jsx_runtime_1.jsx)(ProjectStage_1.default, { stage: 2, cardsCount: (_b = (0, cardsUtils_1.filterCards)(cards, 2)) === null || _b === void 0 ? void 0 : _b.length }), (0, jsx_runtime_1.jsx)(ProjectStage_1.default, { stage: 3, cardsCount: (_c = (0, cardsUtils_1.filterCards)(cards, 3)) === null || _c === void 0 ? void 0 : _c.length }), (0, jsx_runtime_1.jsx)(ProjectStage_1.default, { stage: 4, cardsCount: (_d = (0, cardsUtils_1.filterCards)(cards, 4)) === null || _d === void 0 ? void 0 : _d.length }), (0, jsx_runtime_1.jsx)(ProjectStage_1.default, { stage: 5, cardsCount: (_e = (0, cardsUtils_1.filterCards)(cards, 5)) === null || _e === void 0 ? void 0 : _e.length }), (0, jsx_runtime_1.jsx)(ProjectStage_1.default, { stage: 6, cardsCount: (_f = (0, cardsUtils_1.filterCards)(cards, 6)) === null || _f === void 0 ? void 0 : _f.length })] })), (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "project-info" }, { children: [(0, jsx_runtime_1.jsx)("div", Object.assign({ className: "project-info-title" }, { children: title })), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "project-info-description" }, { children: description })), (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "project-info-footer" }, { children: [(0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: `/project/${projectId}`, small: true, color: "theme-dark", style: { marginRight: "8px" } }, { children: "Edit" })), (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ small: true, color: "theme-red" }, { children: "Delete" }))] }))] }))] })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: () => { }, color: "theme-blue", shadow: true, fill: true }, { children: "Practice" })) })] })));
 };
 exports.default = Project;

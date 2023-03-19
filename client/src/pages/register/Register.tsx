@@ -24,8 +24,8 @@ const Register = () => {
   const onSignup = async () => {
     if (email && password) {
       const res = await signup();
-      if (res.data.signup.token) {
-        localStorage.setItem("token", res.data.signup.token);
+      if (res?.data?.signup?.token) {
+        localStorage.setItem("token", res?.data?.signup?.token);
         navigate("/me");
       }
     }

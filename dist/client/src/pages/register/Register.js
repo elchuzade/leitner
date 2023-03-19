@@ -1,8 +1,18 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsx_runtime_1 = require("react/jsx-runtime");
 const react_1 = require("react");
 const ThemeButton_1 = __importDefault(require("../../components/theme/themeButton/ThemeButton"));
 const ThemeInput_1 = __importDefault(require("../../components/theme/themeInput/ThemeInput"));
@@ -11,32 +21,27 @@ const ThemeTitle_1 = __importDefault(require("../../components/theme/themeTitle/
 const BottomNavigation_1 = __importDefault(require("../../components/bottomNavigation/BottomNavigation"));
 const LeitnerIcon_1 = require("../../components/leitnerIcon/LeitnerIcon");
 const io5_1 = require("react-icons/io5");
+const client_1 = require("@apollo/client");
+const authMutations_1 = require("../../mutations/authMutations");
+const react_router_dom_1 = require("react-router-dom");
 const Register = () => {
+    const navigate = (0, react_router_dom_1.useNavigate)();
     const [name, setName] = (0, react_1.useState)("");
     const [email, setEmail] = (0, react_1.useState)("");
     const [password, setPassword] = (0, react_1.useState)("");
-    return (<div className="wrapper wrapper-flex">
-      <TopNavigation_1.default>
-        <ThemeButton_1.default link="/" small color="theme-light" shadow icon style={{ marginRight: "auto" }}>
-          <io5_1.IoChevronBackOutline />
-        </ThemeButton_1.default>
-        <ThemeButton_1.default link="/" style={{ padding: 0 }}>
-          <LeitnerIcon_1.LeitnerIcon width={32} height={40}/>
-        </ThemeButton_1.default>
-      </TopNavigation_1.default>
-      <div className="wrapper-top-navigation">
-        <div className="register">
-          <ThemeTitle_1.default>Register</ThemeTitle_1.default>
-          <ThemeInput_1.default value={name} onChange={(e) => setName(e.target.value)} type="name" placeholder="name" color="theme-white" shadow fill style={{ marginBottom: "16px" }}/>
-          <ThemeInput_1.default value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="email" color="theme-white" shadow fill style={{ marginBottom: "16px" }}/>
-          <ThemeInput_1.default value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="password" color="theme-white" shadow fill style={{ marginBottom: "16px" }}/>
-        </div>
-      </div>
-      <BottomNavigation_1.default>
-        <ThemeButton_1.default onClick={() => { }} color="theme-blue" shadow fill>
-          Register
-        </ThemeButton_1.default>
-      </BottomNavigation_1.default>
-    </div>);
+    const [signup] = (0, client_1.useMutation)(authMutations_1.SIGNUP, {
+        variables: { name, email, password },
+    });
+    const onSignup = () => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b, _c, _d;
+        if (email && password) {
+            const res = yield signup();
+            if ((_b = (_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.signup) === null || _b === void 0 ? void 0 : _b.token) {
+                localStorage.setItem("token", (_d = (_c = res === null || res === void 0 ? void 0 : res.data) === null || _c === void 0 ? void 0 : _c.signup) === null || _d === void 0 ? void 0 : _d.token);
+                navigate("/me");
+            }
+        }
+    });
+    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper wrapper-flex" }, { children: [(0, jsx_runtime_1.jsxs)(TopNavigation_1.default, { children: [(0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: "/", small: true, color: "theme-light", shadow: true, icon: true, style: { marginRight: "auto" } }, { children: (0, jsx_runtime_1.jsx)(io5_1.IoChevronBackOutline, {}) })), (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: "/", style: { padding: 0 } }, { children: (0, jsx_runtime_1.jsx)(LeitnerIcon_1.LeitnerIcon, { width: 32, height: 40 }) }))] }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "register" }, { children: [(0, jsx_runtime_1.jsx)(ThemeTitle_1.default, { children: "Register" }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: name, onChange: (e) => setName(e.target.value), type: "name", placeholder: "name", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: email, onChange: (e) => setEmail(e.target.value), type: "email", placeholder: "email", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: password, onChange: (e) => setPassword(e.target.value), type: "password", placeholder: "password", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } })] })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: onSignup, color: "theme-blue", shadow: true, fill: true }, { children: "Register" })) })] })));
 };
 exports.default = Register;

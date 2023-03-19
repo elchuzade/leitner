@@ -9,23 +9,20 @@ import { useQuery } from "@apollo/client";
 interface Props {}
 
 const Profile = ({}: Props) => {
-  const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState("https://picsum.photos/200");
-  const [projects, setProjects] = useState<any>([]);
+  const [name, setName] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("https://picsum.photos/200");
+  const [projects, setProjects] = useState<Project[]>([]);
 
   const profileRes = useQuery(GET_PROFILE);
   const projectsRes = useQuery(GET_PROJECTS);
 
   useEffect(() => {
-    setName(profileRes?.data?.profile?.name);
+    setName(profileRes?.data?.profile?.name || "");
   }, [profileRes]);
 
   useEffect(() => {
-    setProjects(projectsRes?.data?.projects);
+    setProjects(projectsRes?.data?.projects || []);
   }, [projectsRes]);
-
-  if (profileRes.loading || projectsRes.loading) return <>loading</>;
-  if (profileRes.error || projectsRes.error) return <p>Something went wrong</p>;
 
   return (
     <div className="wrapper">
@@ -48,7 +45,7 @@ const Profile = ({}: Props) => {
           Projects
         </ThemeTitle>
         <div className="profile-projects">
-          {projects?.map((project: any) => (
+          {projects?.map((project: Project) => (
             <ProjectItem key={project.id} project={project} />
           ))}
         </div>

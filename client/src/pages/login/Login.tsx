@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
@@ -8,7 +9,6 @@ import { LeitnerIcon } from "../../components/leitnerIcon/LeitnerIcon";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { useMutation } from "@apollo/client";
 import { SIGNIN } from "../../mutations/authMutations";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,8 +23,8 @@ const Login = () => {
   const onSignin = async () => {
     if (email && password) {
       const res = await signin();
-      if (res.data.signin.token) {
-        localStorage.setItem("token", res.data.signin.token);
+      if (res?.data?.signin?.token) {
+        localStorage.setItem("token", res?.data?.signin?.token);
         navigate("/me");
       }
     }

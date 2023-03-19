@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
@@ -9,6 +10,8 @@ import BottomNavigation from "../../components/bottomNavigation/BottomNavigation
 interface Props {}
 
 const Practice = ({}: Props) => {
+  const { projectId, cardId } = useParams();
+
   const [card, setCard] = useState<any>({
     title: "Parkieren",
     hint: "For cards",
@@ -26,7 +29,7 @@ const Practice = ({}: Props) => {
     <div className="wrapper">
       <TopNavigation>
         <ThemeButton
-          link="/projects/123"
+          link={`/projects/${projectId}`}
           small
           color="theme-light"
           shadow
@@ -36,7 +39,7 @@ const Practice = ({}: Props) => {
           <IoChevronBackOutline />
         </ThemeButton>
         <ThemeButton
-          link="/projects/123/card/12"
+          link={`/projects/${projectId}/card/${cardId}`}
           small
           color="theme-light"
           icon

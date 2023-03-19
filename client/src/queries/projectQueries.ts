@@ -9,4 +9,14 @@ const GET_PROJECTS = gql`
   }
 `;
 
-export { GET_PROJECTS };
+const GET_PROJECT = gql`
+  query project($projectId: ID!) {
+    project(projectId: $projectId) {
+      id
+      title
+      description
+    }
+  }
+`;
+
+export { GET_PROJECTS, GET_PROJECT };

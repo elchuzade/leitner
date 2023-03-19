@@ -15,6 +15,7 @@ const CardSchema = new Schema(
       type: String,
     },
     stage: {
+      // type: 1 | 2 | 3 | 4 | 5 | 6,
       type: Number,
     },
     user: {

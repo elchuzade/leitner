@@ -9,7 +9,7 @@ import CardSection from "../../components/card/cardSection/CardSection";
 interface Props {}
 
 const Card = ({}: Props) => {
-  let { id, cardId } = useParams();
+  let { projectId, cardId } = useParams();
 
   const [card, setCard] = useState<any>({
     title: "Parkieren",
@@ -19,14 +19,14 @@ const Card = ({}: Props) => {
   });
 
   useEffect(() => {
-    console.log(id, cardId);
-  }, [id, cardId]);
+    console.log(projectId, cardId);
+  }, [projectId, cardId]);
 
   return (
     <div className="wrapper">
       <TopNavigation>
         <ThemeButton
-          link="/projects/123"
+          link={`/projects/${projectId}`}
           small
           color="theme-light"
           shadow
@@ -36,7 +36,7 @@ const Card = ({}: Props) => {
           <IoChevronBackOutline />
         </ThemeButton>
         <ThemeButton
-          link="/projects/123/card/12"
+          link={`/projects/${projectId}/cards/${cardId}`}
           small
           color="theme-light"
           icon
