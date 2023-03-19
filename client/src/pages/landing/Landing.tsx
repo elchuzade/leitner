@@ -12,7 +12,6 @@ const Landing = () => {
         <BottomNavigation>
           <ThemeButton
             link="/login"
-            outline
             color="theme-white"
             shadow
             fill

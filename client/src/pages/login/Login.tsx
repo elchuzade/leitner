@@ -8,8 +8,11 @@ import { LeitnerIcon } from "../../components/leitnerIcon/LeitnerIcon";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { useMutation } from "@apollo/client";
 import { SIGNIN } from "../../mutations/authMutations";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -22,6 +25,7 @@ const Login = () => {
       const res = await signin();
       if (res.data.signin.token) {
         localStorage.setItem("token", res.data.signin.token);
+        navigate("/me");
       }
     }
   };

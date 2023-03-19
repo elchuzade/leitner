@@ -1,3 +1,12 @@
+type Card = {
+  id: string;
+  title: string;
+  stage: string;
+  hint?: string;
+  description?: string;
+  answer?: string;
+};
+
 type ThemeColor =
   | "theme-light"
   | "theme-dark"

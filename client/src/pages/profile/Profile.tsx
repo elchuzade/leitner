@@ -1,17 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import ProjectItem from "../../components/project/projectItem/ProjectItem";
+import { GET_PROFILE } from "../../queries/profileQueries";
+import { GET_PROJECTS } from "../../queries/projectQueries";
+import { useQuery } from "@apollo/client";
 
 interface Props {}
 
 const Profile = ({}: Props) => {
-  const [name, setName] = useState("Kamran Elchuzade");
+  const [name, setName] = useState("");
   const [avatar, setAvatar] = useState("https://picsum.photos/200");
-  const [projects, setProjects] = useState<any>([
-    { id: 1, title: "German Language A1", cards: [1, 2, 3, 4, 5, 6] },
-    { id: 2, title: "German Language A2", cards: [1, 2, 3] },
-  ]);
+  const [projects, setProjects] = useState<any>([]);
+
+  const profileRes = useQuery(GET_PROFILE);
+  const projectsRes = useQuery(GET_PROJECTS);
+
+  useEffect(() => {
+    setName(profileRes?.data?.profile?.name);
+  }, [profileRes]);
+
+  useEffect(() => {
+    setProjects(projectsRes?.data?.projects);
+  }, [projectsRes]);
+
+  if (profileRes.loading || projectsRes.loading) return <>loading</>;
+  if (profileRes.error || projectsRes.error) return <p>Something went wrong</p>;
 
   return (
     <div className="wrapper">
@@ -34,7 +48,7 @@ const Profile = ({}: Props) => {
           Projects
         </ThemeTitle>
         <div className="profile-projects">
-          {projects.map((project: any) => (
+          {projects?.map((project: any) => (
             <ProjectItem key={project.id} project={project} />
           ))}
         </div>
