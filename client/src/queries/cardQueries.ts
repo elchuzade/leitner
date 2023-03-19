@@ -13,4 +13,17 @@ const GET_CARDS = gql`
   }
 `;
 
-export { GET_CARDS };
+const GET_CARD = gql`
+  query card($cardId: ID!) {
+    card(cardId: $cardId) {
+      id
+      title
+      hint
+      description
+      answer
+      stage
+    }
+  }
+`;
+
+export { GET_CARDS, GET_CARD };

@@ -31,8 +31,8 @@ const UPDATE_PROJECT = (0, client_1.gql) `
 `;
 exports.UPDATE_PROJECT = UPDATE_PROJECT;
 const DELETE_PROJECT = (0, client_1.gql) `
-  mutation updateProject($projectId: ID!) {
-    updateProject(projectId: $projectId) {
+  mutation deleteProject($projectId: ID!) {
+    deleteProject(projectId: $projectId) {
       id
       title
       description

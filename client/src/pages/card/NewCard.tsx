@@ -7,6 +7,9 @@ import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { GET_CARD } from "../../queries/cardQueries";
+import { UPDATE_CARD } from "../../mutations/cardMutations";
 
 interface Props {}
 
@@ -17,10 +20,36 @@ const NewCard = ({}: Props) => {
   const [hint, setHint] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
+  const [stage, setStage] = useState<Number>(1);
+
+  const [getCardRes, cardRes] = useLazyQuery(GET_CARD, {
+    variables: { cardId },
+  });
+
+  const [updateCard, updateCardRes] = useMutation(UPDATE_CARD, {
+    variables: { cardId, title, hint, description, answer, stage },
+  });
 
   useEffect(() => {
-    console.log(projectId, cardId);
-  }, [projectId, cardId]);
+    // If cardId exists then it is edit project so fetch the project, else it is add project
+    if (cardId) {
+      getCardRes();
+    }
+  }, []);
+
+  useEffect(() => {
+    setTitle(cardRes?.data?.card?.title || "");
+    setHint(cardRes?.data?.card?.hint || "");
+    setDescription(cardRes?.data?.card?.description || "");
+    setAnswer(cardRes?.data?.card?.answer || "");
+    setStage(cardRes?.data?.card?.stage || 1);
+  }, [cardRes]);
+
+  const onSaveCard = () => {
+    if (title) {
+      updateCard();
+    }
+  };
 
   return (
     <div className="wrapper wrapper-flex">
@@ -92,7 +121,7 @@ const NewCard = ({}: Props) => {
         </div>
       </div>
       <BottomNavigation>
-        <ThemeButton onClick={() => {}} color="theme-blue" shadow fill>
+        <ThemeButton onClick={onSaveCard} color="theme-blue" shadow fill>
           Save
         </ThemeButton>
       </BottomNavigation>

@@ -46,7 +46,7 @@ const NewProject = ({}: Props) => {
     }
   }, [updateProjectRes]);
 
-  const onUpdateProject = () => {
+  const onSaveProject = () => {
     if (title && description) {
       updateProject();
     }
@@ -98,7 +98,7 @@ const NewProject = ({}: Props) => {
         </div>
       </div>
       <BottomNavigation>
-        <ThemeButton onClick={onUpdateProject} color="theme-blue" shadow fill>
+        <ThemeButton onClick={onSaveProject} color="theme-blue" shadow fill>
           Save
         </ThemeButton>
       </BottomNavigation>

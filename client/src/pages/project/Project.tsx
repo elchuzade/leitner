@@ -22,18 +22,18 @@ const Project = ({}: Props) => {
   const projectRes = useQuery(GET_PROJECT, {
     variables: { projectId },
   });
-  // const cardsRes = useQuery(GET_CARDS, {
-  //   variables: { projectId },
-  // });
+  const cardsRes = useQuery(GET_CARDS, {
+    variables: { projectId },
+  });
 
   useEffect(() => {
     setTitle(projectRes?.data?.project?.title || "");
     setDescription(projectRes?.data?.project?.description || "");
   }, [projectRes]);
 
-  // useEffect(() => {
-  //   setCards(cardsRes?.data?.cards);
-  // }, [cardsRes]);
+  useEffect(() => {
+    setCards(cardsRes?.data?.cards);
+  }, [cardsRes]);
 
   return (
     <div className="wrapper">

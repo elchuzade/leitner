@@ -69,7 +69,7 @@ const CardType = new GraphQLObjectType({
     name: "Card",
     fields: () => ({
         id: { type: GraphQLID },
-        stage: { type: GraphQLInt },
+        stage: { type: GraphQLNonNull(GraphQLInt) },
         title: { type: GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLString },
         hint: { type: GraphQLString },
@@ -377,10 +377,10 @@ const mutation = new GraphQLObjectType({
             type: CardType,
             args: {
                 title: { type: GraphQLNonNull(GraphQLString) },
-                description: { type: GraphQLString },
                 hint: { type: GraphQLString },
+                description: { type: GraphQLString },
                 answer: { type: GraphQLString },
-                stage: { type: GraphQLInt },
+                stage: { type: GraphQLNonNull(GraphQLInt) },
                 projectId: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args, context) {
@@ -410,8 +410,8 @@ const mutation = new GraphQLObjectType({
                         }
                         const card = new Card({
                             title: args.title,
-                            description: args.description,
                             hint: args.hint,
+                            description: args.description,
                             answer: args.answer,
                             stage: args.stage || 1,
                             user: user._id,
@@ -432,10 +432,10 @@ const mutation = new GraphQLObjectType({
             type: CardType,
             args: {
                 title: { type: GraphQLNonNull(GraphQLString) },
-                description: { type: GraphQLString },
                 hint: { type: GraphQLString },
+                description: { type: GraphQLString },
                 answer: { type: GraphQLString },
-                stage: { type: GraphQLInt },
+                stage: { type: GraphQLNonNull(GraphQLInt) },
                 cardId: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args, context) {

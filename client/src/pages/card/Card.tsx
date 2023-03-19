@@ -5,28 +5,29 @@ import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { HiOutlinePencil } from "react-icons/hi";
 import CardSection from "../../components/card/cardSection/CardSection";
+import { useQuery } from "@apollo/client";
+import { GET_CARD } from "../../queries/cardQueries";
 
 interface Props {}
 
 const Card = ({}: Props) => {
   let { projectId, cardId } = useParams();
 
-  const [card, setCard] = useState<any>({
-    title: "Parkieren",
-    hint: "For cards",
-    description: "When you stop the car somewhere, the action that you perfom",
-    answer: "To park",
+  const [card, setCard] = useState<Card>();
+
+  const cardRes = useQuery(GET_CARD, {
+    variables: { cardId },
   });
 
   useEffect(() => {
-    console.log(projectId, cardId);
-  }, [projectId, cardId]);
+    setCard(cardRes?.data?.card);
+  }, [cardRes]);
 
   return (
     <div className="wrapper">
       <TopNavigation>
         <ThemeButton
-          link={`/projects/${projectId}`}
+          link={`/projects/${projectId}/cards`}
           small
           color="theme-light"
           shadow
@@ -36,7 +37,7 @@ const Card = ({}: Props) => {
           <IoChevronBackOutline />
         </ThemeButton>
         <ThemeButton
-          link={`/projects/${projectId}/cards/${cardId}`}
+          link={`/projects/${projectId}/card/${cardId}`}
           small
           color="theme-light"
           icon
@@ -47,10 +48,10 @@ const Card = ({}: Props) => {
       </TopNavigation>
       <div className="wrapper-top-navigation">
         <div className="card-sections">
-          <CardSection section="title" card={card} />
-          <CardSection section="hint" card={card} />
-          <CardSection section="description" card={card} />
-          <CardSection section="answer" card={card} />
+          {card && <CardSection section="title" card={card} show />}
+          {card && <CardSection section="hint" card={card} show />}
+          {card && <CardSection section="description" card={card} show />}
+          {card && <CardSection section="answer" card={card} show />}
         </div>
       </div>
     </div>
