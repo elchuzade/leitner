@@ -47,9 +47,16 @@
 
   &-light {
     background: $theme-light;
-
     &:hover {
       background: $theme-light-hover;
+    }
+    &-disabled {
+      background: $theme-light-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-light-disabled;
+      }
     }
   }
 
@@ -59,12 +66,28 @@
     &:hover {
       background: $theme-dark-hover;
     }
+    &-disabled {
+      background: $theme-dark-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-dark-disabled;
+      }
+    }
   }
 
   &-green {
     background: $theme-green;
     &:hover {
       background: $theme-green-hover;
+    }
+    &-disabled {
+      background: $theme-green-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-green-disabled;
+      }
     }
   }
 
@@ -73,12 +96,28 @@
     &:hover {
       background: $theme-blue-hover;
     }
+    &-disabled {
+      background: $theme-blue-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-blue-disabled;
+      }
+    }
   }
 
   &-yellow {
     background: $theme-yellow;
     &:hover {
       background: $theme-yellow-hover;
+    }
+    &-disabled {
+      background: $theme-yellow-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-yellow-disabled;
+      }
     }
   }
 
@@ -88,6 +127,14 @@
     &:hover {
       background: $theme-red-hover;
     }
+    &-disabled {
+      background: $theme-red-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-red-disabled;
+      }
+    }
   }
 
   &-black {
@@ -96,6 +143,14 @@
     &:hover {
       background: $theme-black-hover;
     }
+    &-disabled {
+      background: $theme-black-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-black-disabled;
+      }
+    }
   }
 
   &-white {
@@ -103,17 +158,32 @@
     &:hover {
       background: $theme-white-hover;
     }
+    &-disabled {
+      background: $theme-white-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-white-disabled;
+      }
+    }
   }
 
   &-transparent {
     background: $theme-transparent;
     box-shadow: none;
     color: $theme-dark;
-
     &:hover {
       background: $theme-transparent-hover;
       box-shadow: none;
       color: $theme-black;
+    }
+    &-disabled {
+      background: $theme-transparent-disabled;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: not-allowed;
+        background: $theme-transparent-disabled;
+      }
     }
   }
 }

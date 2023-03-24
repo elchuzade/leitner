@@ -91,7 +91,7 @@ function App() {
                 element={<Card />}
               />
               <Route
-                path="/projects/:projectId/practice"
+                path="/projects/:projectId/practice/:stage"
                 element={<Practice />}
               />
               <Route path="*" element={<NotFound />} />

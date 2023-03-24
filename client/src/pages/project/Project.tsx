@@ -9,12 +9,14 @@ import { GET_CARDS } from "../../queries/cardQueries";
 import { GET_PROJECT } from "../../queries/projectQueries";
 import { useQuery } from "@apollo/client";
 import { filterCards } from "../../utils/cardsUtils";
+import BackButton from "../../components/topNavigation/BackButton";
 
 interface Props {}
 
 const Project = ({}: Props) => {
   let { projectId } = useParams();
 
+  const [stage, setStage] = useState<Number>(0);
   const [cards, setCards] = useState<Card[]>([]);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -38,16 +40,7 @@ const Project = ({}: Props) => {
   return (
     <div className="wrapper">
       <TopNavigation>
-        <ThemeButton
-          link="/me"
-          small
-          color="theme-light"
-          shadow
-          icon
-          style={{ marginRight: "auto" }}
-        >
-          <IoChevronBackOutline />
-        </ThemeButton>
+        <BackButton />
         <ThemeButton
           link={`/projects/${projectId}/cards`}
           small
@@ -61,26 +54,38 @@ const Project = ({}: Props) => {
         <div className="project">
           <div className="project-stages">
             <ProjectStage
+              onClick={() => setStage(1)}
+              selected={stage === 1}
               stage={1}
               cardsCount={filterCards(cards, 1)?.length}
             />
             <ProjectStage
+              onClick={() => setStage(2)}
+              selected={stage === 2}
               stage={2}
               cardsCount={filterCards(cards, 2)?.length}
             />
             <ProjectStage
+              onClick={() => setStage(3)}
+              selected={stage === 3}
               stage={3}
               cardsCount={filterCards(cards, 3)?.length}
             />
             <ProjectStage
+              onClick={() => setStage(4)}
+              selected={stage === 4}
               stage={4}
               cardsCount={filterCards(cards, 4)?.length}
             />
             <ProjectStage
+              onClick={() => setStage(5)}
+              selected={stage === 5}
               stage={5}
               cardsCount={filterCards(cards, 5)?.length}
             />
             <ProjectStage
+              onClick={() => setStage(6)}
+              selected={stage === 6}
               stage={6}
               cardsCount={filterCards(cards, 6)?.length}
             />
@@ -105,8 +110,14 @@ const Project = ({}: Props) => {
         </div>
       </div>
       <BottomNavigation>
-        <ThemeButton onClick={() => {}} color="theme-blue" shadow fill>
-          Practice
+        <ThemeButton
+          disabled={stage === 0}
+          link={`/projects/${projectId}/practice/${stage}`}
+          color="theme-blue"
+          shadow
+          fill
+        >
+          {stage === 0 ? "Select a Stage Above" : "Practice"}
         </ThemeButton>
       </BottomNavigation>
     </div>

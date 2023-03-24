@@ -9,7 +9,8 @@ import BottomNavigation from "../../components/bottomNavigation/BottomNavigation
 import { IoChevronBackOutline } from "react-icons/io5";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_PROJECT } from "../../queries/projectQueries";
-import { UPDATE_PROJECT } from "../../mutations/projectMutations";
+import { UPDATE_PROJECT, ADD_PROJECT } from "../../mutations/projectMutations";
+import BackButton from "../../components/topNavigation/BackButton";
 
 interface Props {}
 
@@ -28,6 +29,10 @@ const NewProject = ({}: Props) => {
     variables: { projectId, title, description },
   });
 
+  const [addProject, addProjectRes] = useMutation(ADD_PROJECT, {
+    variables: { title, description },
+  });
+
   useEffect(() => {
     // If projectId exists then it is edit project so fetch the project, else it is add project
     if (projectId) {
@@ -41,30 +46,33 @@ const NewProject = ({}: Props) => {
   }, [projectRes]);
 
   useEffect(() => {
-    if (updateProjectRes?.data?.updateProject) {
-      navigate(`/projects/${projectId}`);
+    if (
+      updateProjectRes?.data?.updateProject ||
+      addProjectRes?.data?.addProject
+    ) {
+      navigate(
+        `/projects/${
+          updateProjectRes?.data?.updateProject?.id ||
+          addProjectRes?.data?.addProject?.id
+        }`
+      );
     }
-  }, [updateProjectRes]);
+  }, [updateProjectRes, addProjectRes]);
 
   const onSaveProject = () => {
-    if (title && description) {
-      updateProject();
+    if (title) {
+      if (projectId) {
+        updateProject();
+      } else {
+        addProject();
+      }
     }
   };
 
   return (
     <div className="wrapper wrapper-flex">
       <TopNavigation>
-        <ThemeButton
-          link="/me"
-          small
-          color="theme-light"
-          shadow
-          icon
-          style={{ marginRight: "auto" }}
-        >
-          <IoChevronBackOutline />
-        </ThemeButton>
+        <BackButton />
       </TopNavigation>
       <div className="wrapper-top-navigation">
         <div className="project">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import ThemeTextarea from "../../components/theme/themeTextarea/ThemeTextarea";
@@ -9,11 +9,14 @@ import BottomNavigation from "../../components/bottomNavigation/BottomNavigation
 import { IoChevronBackOutline } from "react-icons/io5";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_CARD } from "../../queries/cardQueries";
-import { UPDATE_CARD } from "../../mutations/cardMutations";
+import { UPDATE_CARD, ADD_CARD } from "../../mutations/cardMutations";
+import { GET_CARDS } from "../../queries/cardQueries";
+import BackButton from "../../components/topNavigation/BackButton";
 
 interface Props {}
 
 const NewCard = ({}: Props) => {
+  const navigate = useNavigate();
   const { projectId, cardId } = useParams();
 
   const [title, setTitle] = useState<string>("");
@@ -30,12 +33,23 @@ const NewCard = ({}: Props) => {
     variables: { cardId, title, hint, description, answer, stage },
   });
 
+  const [addCard, addCardRes] = useMutation(ADD_CARD, {
+    variables: { projectId, title, hint, description, answer, stage },
+    refetchQueries: [{ query: GET_CARDS, variables: { projectId } }],
+  });
+
   useEffect(() => {
     // If cardId exists then it is edit project so fetch the project, else it is add project
     if (cardId) {
       getCardRes();
     }
   }, []);
+
+  useEffect(() => {
+    if (updateCardRes?.data?.updateCard || addCardRes?.data?.addCard) {
+      navigate(`/projects/${projectId}`);
+    }
+  }, [updateCardRes, addCardRes]);
 
   useEffect(() => {
     setTitle(cardRes?.data?.card?.title || "");
@@ -47,23 +61,18 @@ const NewCard = ({}: Props) => {
 
   const onSaveCard = () => {
     if (title) {
-      updateCard();
+      if (cardId) {
+        updateCard();
+      } else {
+        addCard();
+      }
     }
   };
 
   return (
     <div className="wrapper wrapper-flex">
       <TopNavigation>
-        <ThemeButton
-          link={`/projects/${projectId}/cards`}
-          small
-          color="theme-light"
-          shadow
-          icon
-          style={{ marginRight: "auto" }}
-        >
-          <IoChevronBackOutline />
-        </ThemeButton>
+        <BackButton />
       </TopNavigation>
       <div className="wrapper-top-navigation">
         <div className="card">

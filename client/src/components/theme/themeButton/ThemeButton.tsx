@@ -9,6 +9,7 @@ interface Props extends BoxProps {
   fill?: boolean;
   link?: string;
   icon?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
   className?: string;
   style?: React.CSSProperties;
@@ -23,6 +24,7 @@ const ThemeButton = ({
   fill,
   link,
   icon,
+  disabled,
   onClick,
   className,
   style,
@@ -38,7 +40,7 @@ const ThemeButton = ({
     shadow ? "button-shadow" : ""
   } ${small ? "button-small" : ""} ${getButtonColor(color) || ""} ${
     icon ? "button-icon" : ""
-  } ${className || ""}`;
+  } ${disabled ? getButtonColor(color) + "-disabled" : ""} ${className || ""}`;
 
   const styleProps = {
     width: fill ? "100%" : "auto",
@@ -48,7 +50,7 @@ const ThemeButton = ({
   if (link) {
     return (
       <Link
-        to={link}
+        to={disabled ? "#" : link}
         className={`button-link ${classProps}`}
         style={styleProps}
       >
@@ -58,7 +60,12 @@ const ThemeButton = ({
   }
 
   return (
-    <button onClick={onClick} className={classProps} style={styleProps}>
+    <button
+      disabled={disabled}
+      onClick={onClick}
+      className={classProps}
+      style={styleProps}
+    >
       {children}
     </button>
   );

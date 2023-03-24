@@ -24,7 +24,7 @@ const ProjectItem = ({ project }: Props) => {
       <div
         className="project-item-progress"
         style={{
-          width: `${filterCards(cards, 5)?.length / cards?.length}%`,
+          width: `${filterCards(cards, 5)?.length / cards?.length || 0}%`,
         }}
       />
       <div className="project-item-title">{project?.title}</div>

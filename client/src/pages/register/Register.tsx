@@ -9,6 +9,7 @@ import { IoChevronBackOutline } from "react-icons/io5";
 import { useMutation } from "@apollo/client";
 import { SIGNUP } from "../../mutations/authMutations";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../../components/topNavigation/BackButton";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -34,16 +35,7 @@ const Register = () => {
   return (
     <div className="wrapper wrapper-flex">
       <TopNavigation>
-        <ThemeButton
-          link="/"
-          small
-          color="theme-light"
-          shadow
-          icon
-          style={{ marginRight: "auto" }}
-        >
-          <IoChevronBackOutline />
-        </ThemeButton>
+        <BackButton />
         <ThemeButton link="/" style={{ padding: 0 }}>
           <LeitnerIcon width={32} height={40} />
         </ThemeButton>

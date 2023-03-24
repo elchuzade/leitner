@@ -10,6 +10,7 @@ import { IoChevronBackOutline } from "react-icons/io5";
 import { GET_CARDS } from "../../queries/cardQueries";
 import { useQuery } from "@apollo/client";
 import { filterCards } from "../../utils/cardsUtils";
+import BackButton from "../../components/topNavigation/BackButton";
 
 interface Props {}
 
@@ -100,16 +101,7 @@ const Cards = ({}: Props) => {
   return (
     <div className="wrapper">
       <TopNavigation>
-        <ThemeButton
-          link={`/projects/${projectId}`}
-          small
-          color="theme-light"
-          shadow
-          icon
-          style={{ marginRight: "auto" }}
-        >
-          <IoChevronBackOutline />
-        </ThemeButton>
+        <BackButton />
         <ThemeButton
           link={`/projects/${projectId}/card`}
           small

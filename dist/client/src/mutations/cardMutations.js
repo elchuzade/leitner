@@ -9,7 +9,6 @@ const ADD_CARD = (0, client_1.gql) `
     $hint: String
     $description: String
     $answer: String
-    $stage: Number!
   ) {
     addCard(
       projectId: $projectId
@@ -17,7 +16,6 @@ const ADD_CARD = (0, client_1.gql) `
       hint: $hint
       description: $description
       answer: $answer
-      stage: 1
     ) {
       id
       title
@@ -31,13 +29,11 @@ const ADD_CARD = (0, client_1.gql) `
 exports.ADD_CARD = ADD_CARD;
 const UPDATE_CARD = (0, client_1.gql) `
   mutation updateCard(
-    $projectId: ID!
     $cardId: ID!
     $title: String!
     $hint: String
     $description: String
     $answer: String
-    $stage: Number!
   ) {
     updateCard(
       cardId: $cardId
@@ -45,7 +41,6 @@ const UPDATE_CARD = (0, client_1.gql) `
       hint: $hint
       description: $description
       answer: $answer
-      stage: $stage
     ) {
       id
       title

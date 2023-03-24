@@ -17,7 +17,7 @@ const ProjectItem = ({ project }) => {
         setCards((_a = cardsRes === null || cardsRes === void 0 ? void 0 : cardsRes.data) === null || _a === void 0 ? void 0 : _a.cards);
     }, [cardsRes]);
     return ((0, jsx_runtime_1.jsxs)(react_router_dom_1.Link, Object.assign({ to: `/projects/${project === null || project === void 0 ? void 0 : project.id}`, className: "project-item" }, { children: [(0, jsx_runtime_1.jsx)("div", { className: "project-item-progress", style: {
-                    width: `${((_a = (0, cardsUtils_1.filterCards)(cards, 5)) === null || _a === void 0 ? void 0 : _a.length) / (cards === null || cards === void 0 ? void 0 : cards.length)}%`,
+                    width: `${((_a = (0, cardsUtils_1.filterCards)(cards, 5)) === null || _a === void 0 ? void 0 : _a.length) / (cards === null || cards === void 0 ? void 0 : cards.length) || 0}%`,
                 } }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "project-item-title" }, { children: project === null || project === void 0 ? void 0 : project.title })), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "project-item-cardscount" }, { children: cards === null || cards === void 0 ? void 0 : cards.length }))] })));
 };
 exports.default = ProjectItem;

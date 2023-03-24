@@ -7,6 +7,7 @@ import { HiOutlinePencil } from "react-icons/hi";
 import CardSection from "../../components/card/cardSection/CardSection";
 import { useQuery } from "@apollo/client";
 import { GET_CARD } from "../../queries/cardQueries";
+import BackButton from "../../components/topNavigation/BackButton";
 
 interface Props {}
 
@@ -26,16 +27,7 @@ const Card = ({}: Props) => {
   return (
     <div className="wrapper">
       <TopNavigation>
-        <ThemeButton
-          link={`/projects/${projectId}/cards`}
-          small
-          color="theme-light"
-          shadow
-          icon
-          style={{ marginRight: "auto" }}
-        >
-          <IoChevronBackOutline />
-        </ThemeButton>
+        <BackButton />
         <ThemeButton
           link={`/projects/${projectId}/card/${cardId}`}
           small

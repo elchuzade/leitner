@@ -7,7 +7,6 @@ const ADD_CARD = gql`
     $hint: String
     $description: String
     $answer: String
-    $stage: Int!
   ) {
     addCard(
       projectId: $projectId
@@ -15,7 +14,6 @@ const ADD_CARD = gql`
       hint: $hint
       description: $description
       answer: $answer
-      stage: 1
     ) {
       id
       title
@@ -34,7 +32,6 @@ const UPDATE_CARD = gql`
     $hint: String
     $description: String
     $answer: String
-    $stage: Int!
   ) {
     updateCard(
       cardId: $cardId
@@ -42,7 +39,6 @@ const UPDATE_CARD = gql`
       hint: $hint
       description: $description
       answer: $answer
-      stage: $stage
     ) {
       id
       title

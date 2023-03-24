@@ -14,7 +14,7 @@
     padding: 12px;
     border-radius: 12px;
     font-size: 16px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     color: black;
     height: 120px;
     margin: 8px;
@@ -61,6 +61,16 @@
       background: $theme-green;
       &:hover {
         background: $theme-green-hover;
+      }
+    }
+
+    &-selected {
+      border: 2px solid $theme-border;
+      box-shadow: none;
+
+      &:hover {
+        border: 2px solid $theme-border;
+        box-shadow: none;
       }
     }
   }

@@ -27,6 +27,9 @@ const NewProject = ({}) => {
     const [updateProject, updateProjectRes] = (0, client_1.useMutation)(projectMutations_1.UPDATE_PROJECT, {
         variables: { projectId, title, description },
     });
+    const [addProject, addProjectRes] = (0, client_1.useMutation)(projectMutations_1.ADD_PROJECT, {
+        variables: { title, description },
+    });
     (0, react_1.useEffect)(() => {
         // If projectId exists then it is edit project so fetch the project, else it is add project
         if (projectId) {
@@ -39,14 +42,21 @@ const NewProject = ({}) => {
         setDescription(((_d = (_c = projectRes === null || projectRes === void 0 ? void 0 : projectRes.data) === null || _c === void 0 ? void 0 : _c.project) === null || _d === void 0 ? void 0 : _d.description) || "");
     }, [projectRes]);
     (0, react_1.useEffect)(() => {
-        var _a;
-        if ((_a = updateProjectRes === null || updateProjectRes === void 0 ? void 0 : updateProjectRes.data) === null || _a === void 0 ? void 0 : _a.updateProject) {
-            navigate(`/projects/${projectId}`);
+        var _a, _b, _c, _d, _e, _f;
+        if (((_a = updateProjectRes === null || updateProjectRes === void 0 ? void 0 : updateProjectRes.data) === null || _a === void 0 ? void 0 : _a.updateProject) ||
+            ((_b = addProjectRes === null || addProjectRes === void 0 ? void 0 : addProjectRes.data) === null || _b === void 0 ? void 0 : _b.addProject)) {
+            navigate(`/projects/${((_d = (_c = updateProjectRes === null || updateProjectRes === void 0 ? void 0 : updateProjectRes.data) === null || _c === void 0 ? void 0 : _c.updateProject) === null || _d === void 0 ? void 0 : _d.id) ||
+                ((_f = (_e = addProjectRes === null || addProjectRes === void 0 ? void 0 : addProjectRes.data) === null || _e === void 0 ? void 0 : _e.addProject) === null || _f === void 0 ? void 0 : _f.id)}`);
         }
-    }, [updateProjectRes]);
+    }, [updateProjectRes, addProjectRes]);
     const onSaveProject = () => {
-        if (title && description) {
-            updateProject();
+        if (title) {
+            if (projectId) {
+                updateProject();
+            }
+            else {
+                addProject();
+            }
         }
     };
     return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper wrapper-flex" }, { children: [(0, jsx_runtime_1.jsx)(TopNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: "/me", small: true, color: "theme-light", shadow: true, icon: true, style: { marginRight: "auto" } }, { children: (0, jsx_runtime_1.jsx)(io5_1.IoChevronBackOutline, {}) })) }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "project" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "project-new" }, { children: [(0, jsx_runtime_1.jsxs)(ThemeTitle_1.default, { children: [projectId ? "Edit" : "Add", " Project"] }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: title, onChange: (e) => setTitle(e.target.value), type: "title", placeholder: "title", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeTextarea_1.default, { value: description, rows: 6, onChange: (e) => setDescription(e.target.value), placeholder: "description", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } })] })) })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: onSaveProject, color: "theme-blue", shadow: true, fill: true }, { children: "Save" })) })] })));

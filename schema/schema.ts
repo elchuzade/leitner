@@ -392,7 +392,7 @@ const mutation = new GraphQLObjectType({
         hint: { type: GraphQLString },
         description: { type: GraphQLString },
         answer: { type: GraphQLString },
-        stage: { type: GraphQLNonNull(GraphQLInt) },
+        // stage: { type: GraphQLNonNull(GraphQLInt) },
         projectId: { type: GraphQLNonNull(GraphQLID) },
       },
       async resolve(parent: any, args: any, context: any) {
@@ -426,7 +426,7 @@ const mutation = new GraphQLObjectType({
             hint: args.hint,
             description: args.description,
             answer: args.answer,
-            stage: args.stage || 1,
+            stage: 1,
             user: user._id,
             project: project._id,
           });
@@ -447,7 +447,6 @@ const mutation = new GraphQLObjectType({
         hint: { type: GraphQLString },
         description: { type: GraphQLString },
         answer: { type: GraphQLString },
-        stage: { type: GraphQLNonNull(GraphQLInt) },
         cardId: { type: GraphQLNonNull(GraphQLID) },
       },
       async resolve(parent: any, args: any, context: any) {
@@ -490,7 +489,6 @@ const mutation = new GraphQLObjectType({
           card.description = args.description;
           card.hint = args.hint;
           card.answer = args.answer;
-          card.stage = args.stage || 1;
 
           return card.save();
         } catch (error) {
