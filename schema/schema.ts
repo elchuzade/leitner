@@ -550,6 +550,112 @@ const mutation = new GraphQLObjectType({
         }
       },
     },
+    // Move card forward
+    forwardCard: {
+      type: CardType,
+      args: {
+        cardId: { type: GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = "Could not move card forward.";
+
+        try {
+          const user = await User.findById(userPayload.id);
+          if (!user) {
+            errorMessage += " User not found.";
+            throw errorMessage;
+          }
+
+          const card = await Card.findById(args.cardId);
+          if (!card) {
+            errorMessage += " Card not found.";
+            throw errorMessage;
+          }
+          if (card.deleted) {
+            errorMessage += " Card is deleted.";
+            throw errorMessage;
+          }
+          if (JSON.stringify(card.user) !== JSON.stringify(user._id)) {
+            errorMessage += " Unauthorized.";
+            throw errorMessage;
+          }
+
+          const project = await Project.findById(card.project);
+          if (!project) {
+            errorMessage += " Project not found.";
+            throw errorMessage;
+          }
+          if (project.deleted) {
+            errorMessage += " Project is deleted.";
+            throw errorMessage;
+          }
+
+          if (card.stage < 6) {
+            card.stage++;
+          }
+
+          return card.save();
+        } catch (error) {
+          throw new GraphQLError(error, {
+            extensions: { code: "" },
+          });
+        }
+      },
+    },
+    // Move card backward
+    backwardCard: {
+      type: CardType,
+      args: {
+        cardId: { type: GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(parent: any, args: any, context: any) {
+        const token = context?.headers?.authorization;
+        const userPayload = jwt.verify(token, process.env.SECRET_OR_KEY);
+        let errorMessage = "Could not move card backward.";
+
+        try {
+          const user = await User.findById(userPayload.id);
+          if (!user) {
+            errorMessage += " User not found.";
+            throw errorMessage;
+          }
+
+          const card = await Card.findById(args.cardId);
+          if (!card) {
+            errorMessage += " Card not found.";
+            throw errorMessage;
+          }
+          if (card.deleted) {
+            errorMessage += " Card is deleted.";
+            throw errorMessage;
+          }
+          if (JSON.stringify(card.user) !== JSON.stringify(user._id)) {
+            errorMessage += " Unauthorized.";
+            throw errorMessage;
+          }
+
+          const project = await Project.findById(card.project);
+          if (!project) {
+            errorMessage += " Project not found.";
+            throw errorMessage;
+          }
+          if (project.deleted) {
+            errorMessage += " Project is deleted.";
+            throw errorMessage;
+          }
+
+          card.stage = 1;
+
+          return card.save();
+        } catch (error) {
+          throw new GraphQLError(error, {
+            extensions: { code: "" },
+          });
+        }
+      },
+    },
   },
 });
 

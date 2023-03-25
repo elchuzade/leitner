@@ -6,7 +6,6 @@ import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import ThemeInput from "../../components/theme/themeInput/ThemeInput";
 import CardItem from "../../components/card/cardItem/CardItem";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { IoChevronBackOutline } from "react-icons/io5";
 import { GET_CARDS } from "../../queries/cardQueries";
 import { useQuery } from "@apollo/client";
 import { filterCards } from "../../utils/cardsUtils";

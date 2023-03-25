@@ -12,10 +12,10 @@ const ThemeTextarea_1 = __importDefault(require("../../components/theme/themeTex
 const TopNavigation_1 = __importDefault(require("../../components/topNavigation/TopNavigation"));
 const ThemeTitle_1 = __importDefault(require("../../components/theme/themeTitle/ThemeTitle"));
 const BottomNavigation_1 = __importDefault(require("../../components/bottomNavigation/BottomNavigation"));
-const io5_1 = require("react-icons/io5");
 const client_1 = require("@apollo/client");
 const projectQueries_1 = require("../../queries/projectQueries");
 const projectMutations_1 = require("../../mutations/projectMutations");
+const BackButton_1 = __importDefault(require("../../components/topNavigation/BackButton"));
 const NewProject = ({}) => {
     const navigate = (0, react_router_1.useNavigate)();
     const { projectId } = (0, react_router_1.useParams)();
@@ -59,6 +59,6 @@ const NewProject = ({}) => {
             }
         }
     };
-    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper wrapper-flex" }, { children: [(0, jsx_runtime_1.jsx)(TopNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: "/me", small: true, color: "theme-light", shadow: true, icon: true, style: { marginRight: "auto" } }, { children: (0, jsx_runtime_1.jsx)(io5_1.IoChevronBackOutline, {}) })) }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "project" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "project-new" }, { children: [(0, jsx_runtime_1.jsxs)(ThemeTitle_1.default, { children: [projectId ? "Edit" : "Add", " Project"] }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: title, onChange: (e) => setTitle(e.target.value), type: "title", placeholder: "title", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeTextarea_1.default, { value: description, rows: 6, onChange: (e) => setDescription(e.target.value), placeholder: "description", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } })] })) })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: onSaveProject, color: "theme-blue", shadow: true, fill: true }, { children: "Save" })) })] })));
+    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper wrapper-flex" }, { children: [(0, jsx_runtime_1.jsx)(TopNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(BackButton_1.default, {}) }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "project" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "project-new" }, { children: [(0, jsx_runtime_1.jsxs)(ThemeTitle_1.default, { children: [projectId ? "Edit" : "Add", " Project"] }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: title, onChange: (e) => setTitle(e.target.value), type: "title", placeholder: "title", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeTextarea_1.default, { value: description, rows: 6, onChange: (e) => setDescription(e.target.value), placeholder: "description", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } })] })) })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: onSaveProject, color: "theme-blue", shadow: true, fill: true }, { children: "Save" })) })] })));
 };
 exports.default = NewProject;

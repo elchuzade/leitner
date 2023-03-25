@@ -63,4 +63,30 @@ const DELETE_CARD = gql`
   }
 `;
 
-export { ADD_CARD, UPDATE_CARD, DELETE_CARD };
+const FORWARD_CARD = gql`
+  mutation forwardCard($cardId: ID!) {
+    forwardCard(cardId: $cardId) {
+      id
+      title
+      hint
+      description
+      answer
+      stage
+    }
+  }
+`;
+
+const BACKWARD_CARD = gql`
+  mutation backwardCard($cardId: ID!) {
+    backwardCard(cardId: $cardId) {
+      id
+      title
+      hint
+      description
+      answer
+      stage
+    }
+  }
+`;
+
+export { ADD_CARD, UPDATE_CARD, DELETE_CARD, FORWARD_CARD, BACKWARD_CARD };

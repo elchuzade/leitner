@@ -7,7 +7,8 @@ import { HiOutlinePencil } from "react-icons/hi";
 import CardSection from "../../components/card/cardSection/CardSection";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
 import { GET_CARDS } from "../../queries/cardQueries";
-import { useQuery } from "@apollo/client";
+import { FORWARD_CARD, BACKWARD_CARD } from "../../mutations/cardMutations";
+import { useQuery, useMutation } from "@apollo/client";
 import { filterCards } from "../../utils/cardsUtils";
 import BackButton from "../../components/topNavigation/BackButton";
 
@@ -22,6 +23,14 @@ const Practice = ({}: Props) => {
 
   const cardsRes = useQuery(GET_CARDS, {
     variables: { projectId },
+  });
+
+  const [forwardCard, forwardCardRes] = useMutation(FORWARD_CARD, {
+    variables: { cardId: cards[index]?.id },
+  });
+
+  const [backwardCard, backwardCardRes] = useMutation(BACKWARD_CARD, {
+    variables: { cardId: cards[index]?.id },
   });
 
   useEffect(() => {
@@ -53,10 +62,12 @@ const Practice = ({}: Props) => {
 
   const makeWordRight = () => {
     console.log(cards[index], index, "right");
+    forwardCard();
   };
 
   const makeWordWrong = () => {
     console.log(cards[index], index, "wrong");
+    backwardCard();
   };
 
   return (

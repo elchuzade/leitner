@@ -4,7 +4,6 @@ import ThemeButton from "../../components/theme/themeButton/ThemeButton";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ProjectStage from "../../components/project/projectStage/ProjectStage";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
-import { IoChevronBackOutline } from "react-icons/io5";
 import { GET_CARDS } from "../../queries/cardQueries";
 import { GET_PROJECT } from "../../queries/projectQueries";
 import { useQuery } from "@apollo/client";
@@ -117,7 +116,7 @@ const Project = ({}: Props) => {
           shadow
           fill
         >
-          {stage === 0 ? "Select a Stage Above" : "Practice"}
+          {stage === 0 ? "Select a Stage Above" : `Practice stage ${stage}`}
         </ThemeButton>
       </BottomNavigation>
     </div>

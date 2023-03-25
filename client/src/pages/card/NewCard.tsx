@@ -6,7 +6,6 @@ import ThemeTextarea from "../../components/theme/themeTextarea/ThemeTextarea";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
-import { IoChevronBackOutline } from "react-icons/io5";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_CARD } from "../../queries/cardQueries";
 import { UPDATE_CARD, ADD_CARD } from "../../mutations/cardMutations";

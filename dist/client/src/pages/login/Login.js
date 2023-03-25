@@ -21,9 +21,9 @@ const TopNavigation_1 = __importDefault(require("../../components/topNavigation/
 const ThemeTitle_1 = __importDefault(require("../../components/theme/themeTitle/ThemeTitle"));
 const BottomNavigation_1 = __importDefault(require("../../components/bottomNavigation/BottomNavigation"));
 const LeitnerIcon_1 = require("../../components/leitnerIcon/LeitnerIcon");
-const io5_1 = require("react-icons/io5");
 const client_1 = require("@apollo/client");
 const authMutations_1 = require("../../mutations/authMutations");
+const BackButton_1 = __importDefault(require("../../components/topNavigation/BackButton"));
 const Login = () => {
     const navigate = (0, react_router_1.useNavigate)();
     const [email, setEmail] = (0, react_1.useState)("");
@@ -41,6 +41,6 @@ const Login = () => {
             }
         }
     });
-    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper wrapper-flex" }, { children: [(0, jsx_runtime_1.jsxs)(TopNavigation_1.default, { children: [(0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: "/", small: true, color: "theme-light", shadow: true, icon: true, style: { marginRight: "auto" } }, { children: (0, jsx_runtime_1.jsx)(io5_1.IoChevronBackOutline, {}) })), (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: "/", style: { padding: 0 } }, { children: (0, jsx_runtime_1.jsx)(LeitnerIcon_1.LeitnerIcon, { width: 32, height: 40 }) }))] }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "login" }, { children: [(0, jsx_runtime_1.jsx)(ThemeTitle_1.default, { children: "Login" }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: email, onChange: (e) => setEmail(e.target.value), type: "email", placeholder: "email", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: password, onChange: (e) => setPassword(e.target.value), type: "password", placeholder: "password", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } })] })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: onSignin, color: "theme-blue", shadow: true, fill: true }, { children: "Login" })) })] })));
+    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper wrapper-flex" }, { children: [(0, jsx_runtime_1.jsxs)(TopNavigation_1.default, { children: [(0, jsx_runtime_1.jsx)(BackButton_1.default, {}), (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: "/", style: { padding: 0 } }, { children: (0, jsx_runtime_1.jsx)(LeitnerIcon_1.LeitnerIcon, { width: 32, height: 40 }) }))] }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "login" }, { children: [(0, jsx_runtime_1.jsx)(ThemeTitle_1.default, { children: "Login" }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: email, onChange: (e) => setEmail(e.target.value), type: "email", placeholder: "email", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: password, onChange: (e) => setPassword(e.target.value), type: "password", placeholder: "password", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } })] })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: onSignin, color: "theme-blue", shadow: true, fill: true }, { children: "Login" })) })] })));
 };
 exports.default = Login;

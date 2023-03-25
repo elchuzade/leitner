@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DELETE_CARD = exports.UPDATE_CARD = exports.ADD_CARD = void 0;
+exports.BACKWARD_CARD = exports.FORWARD_CARD = exports.DELETE_CARD = exports.UPDATE_CARD = exports.ADD_CARD = void 0;
 const client_1 = require("@apollo/client");
 const ADD_CARD = (0, client_1.gql) `
   mutation addCard(
@@ -65,3 +65,29 @@ const DELETE_CARD = (0, client_1.gql) `
   }
 `;
 exports.DELETE_CARD = DELETE_CARD;
+const FORWARD_CARD = (0, client_1.gql) `
+  mutation forwardCard($cardId: ID!) {
+    forwardCard(cardId: $cardId) {
+      id
+      title
+      hint
+      description
+      answer
+      stage
+    }
+  }
+`;
+exports.FORWARD_CARD = FORWARD_CARD;
+const BACKWARD_CARD = (0, client_1.gql) `
+  mutation backwardCard($cardId: ID!) {
+    backwardCard(cardId: $cardId) {
+      id
+      title
+      hint
+      description
+      answer
+      stage
+    }
+  }
+`;
+exports.BACKWARD_CARD = BACKWARD_CARD;

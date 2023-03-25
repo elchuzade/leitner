@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeButton from "../../components/theme/themeButton/ThemeButton";
-import { IoChevronBackOutline } from "react-icons/io5";
 import { HiOutlinePencil } from "react-icons/hi";
 import CardSection from "../../components/card/cardSection/CardSection";
 import { useQuery } from "@apollo/client";

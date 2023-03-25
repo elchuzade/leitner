@@ -12,11 +12,13 @@ const ThemeTextarea_1 = __importDefault(require("../../components/theme/themeTex
 const TopNavigation_1 = __importDefault(require("../../components/topNavigation/TopNavigation"));
 const ThemeTitle_1 = __importDefault(require("../../components/theme/themeTitle/ThemeTitle"));
 const BottomNavigation_1 = __importDefault(require("../../components/bottomNavigation/BottomNavigation"));
-const io5_1 = require("react-icons/io5");
 const client_1 = require("@apollo/client");
 const cardQueries_1 = require("../../queries/cardQueries");
 const cardMutations_1 = require("../../mutations/cardMutations");
+const cardQueries_2 = require("../../queries/cardQueries");
+const BackButton_1 = __importDefault(require("../../components/topNavigation/BackButton"));
 const NewCard = ({}) => {
+    const navigate = (0, react_router_1.useNavigate)();
     const { projectId, cardId } = (0, react_router_1.useParams)();
     const [title, setTitle] = (0, react_1.useState)("");
     const [hint, setHint] = (0, react_1.useState)("");
@@ -30,7 +32,8 @@ const NewCard = ({}) => {
         variables: { cardId, title, hint, description, answer, stage },
     });
     const [addCard, addCardRes] = (0, client_1.useMutation)(cardMutations_1.ADD_CARD, {
-        variables: { title, hint, description, answer, stage },
+        variables: { projectId, title, hint, description, answer, stage },
+        refetchQueries: [{ query: cardQueries_2.GET_CARDS, variables: { projectId } }],
     });
     (0, react_1.useEffect)(() => {
         // If cardId exists then it is edit project so fetch the project, else it is add project
@@ -38,6 +41,12 @@ const NewCard = ({}) => {
             getCardRes();
         }
     }, []);
+    (0, react_1.useEffect)(() => {
+        var _a, _b;
+        if (((_a = updateCardRes === null || updateCardRes === void 0 ? void 0 : updateCardRes.data) === null || _a === void 0 ? void 0 : _a.updateCard) || ((_b = addCardRes === null || addCardRes === void 0 ? void 0 : addCardRes.data) === null || _b === void 0 ? void 0 : _b.addCard)) {
+            navigate(`/projects/${projectId}`);
+        }
+    }, [updateCardRes, addCardRes]);
     (0, react_1.useEffect)(() => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         setTitle(((_b = (_a = cardRes === null || cardRes === void 0 ? void 0 : cardRes.data) === null || _a === void 0 ? void 0 : _a.card) === null || _b === void 0 ? void 0 : _b.title) || "");
@@ -56,6 +65,6 @@ const NewCard = ({}) => {
             }
         }
     };
-    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper wrapper-flex" }, { children: [(0, jsx_runtime_1.jsx)(TopNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ link: `/projects/${projectId}/cards`, small: true, color: "theme-light", shadow: true, icon: true, style: { marginRight: "auto" } }, { children: (0, jsx_runtime_1.jsx)(io5_1.IoChevronBackOutline, {}) })) }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "card" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "card-new" }, { children: [(0, jsx_runtime_1.jsxs)(ThemeTitle_1.default, { children: [cardId ? "Edit" : "Add", " Card"] }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: title, onChange: (e) => setTitle(e.target.value), type: "title", placeholder: "title", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: hint, onChange: (e) => setHint(e.target.value), type: "hint", placeholder: "hint", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeTextarea_1.default, { value: description, rows: 6, onChange: (e) => setDescription(e.target.value), placeholder: "description", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "12px" } }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: answer, onChange: (e) => setAnswer(e.target.value), type: "answer", placeholder: "answer", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } })] })) })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: onSaveCard, color: "theme-blue", shadow: true, fill: true }, { children: "Save" })) })] })));
+    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "wrapper wrapper-flex" }, { children: [(0, jsx_runtime_1.jsx)(TopNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(BackButton_1.default, {}) }), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "wrapper-top-navigation" }, { children: (0, jsx_runtime_1.jsx)("div", Object.assign({ className: "card" }, { children: (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "card-new" }, { children: [(0, jsx_runtime_1.jsxs)(ThemeTitle_1.default, { children: [cardId ? "Edit" : "Add", " Card"] }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: title, onChange: (e) => setTitle(e.target.value), type: "title", placeholder: "title", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: hint, onChange: (e) => setHint(e.target.value), type: "hint", placeholder: "hint", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } }), (0, jsx_runtime_1.jsx)(ThemeTextarea_1.default, { value: description, rows: 6, onChange: (e) => setDescription(e.target.value), placeholder: "description", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "12px" } }), (0, jsx_runtime_1.jsx)(ThemeInput_1.default, { value: answer, onChange: (e) => setAnswer(e.target.value), type: "answer", placeholder: "answer", color: "theme-white", shadow: true, fill: true, style: { marginBottom: "16px" } })] })) })) })), (0, jsx_runtime_1.jsx)(BottomNavigation_1.default, { children: (0, jsx_runtime_1.jsx)(ThemeButton_1.default, Object.assign({ onClick: onSaveCard, color: "theme-blue", shadow: true, fill: true }, { children: "Save" })) })] })));
 };
 exports.default = NewCard;

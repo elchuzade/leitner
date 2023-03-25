@@ -6,7 +6,6 @@ import TopNavigation from "../../components/topNavigation/TopNavigation";
 import ThemeTitle from "../../components/theme/themeTitle/ThemeTitle";
 import BottomNavigation from "../../components/bottomNavigation/BottomNavigation";
 import { LeitnerIcon } from "../../components/leitnerIcon/LeitnerIcon";
-import { IoChevronBackOutline } from "react-icons/io5";
 import { useMutation } from "@apollo/client";
 import { SIGNIN } from "../../mutations/authMutations";
 import BackButton from "../../components/topNavigation/BackButton";
